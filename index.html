@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="그림일기에 그리고 싶은 장면을 쓰면, 초등 저학년이 따라 그릴 수 있게 선을 하나씩 더해 가며 그리는 순서를 보여주는 그림 백과예요.">
+<meta property="og:title" content="그림일기 백과">
+<meta property="og:description" content="달리는 아이, 공 차는 아이, 책상에 앉은 아이… 그림일기 그리는 순서를 한 단계씩 보여줘요.">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>그림일기 백과</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<style>
+/* Layout: 위에 "무엇을 그릴까?" 입력, 아래 왼쪽은 연습장 칸, 오른쪽은 한 단계씩 설명. 휴대폰에서는 위아래로. */
+:root{
+  --bg:#EDF1EA; --paper:#FFFFFF; --paperfill:#FFFFFF; --ink:#26313A; --muted:#5F6C74;
+  --pencil:#6B7780; --new:#E2462B; --accent:#2B66D6; --accent-soft:#DCE7FA;
+  --line:#C3D3E2; --grid:#E3EBF2; --chip:#F3F6F1;
+  --c1:#F5C640; --c2:#7DC48C; --c3:#5A8FE0; --c4:#F7A1A1; --c5:#F39A3C; --c6:#B98A5E; --grass:#3E8E4E; --sweat:#9AD3F3;
+  --display:"Jua","Gowun Dodum",system-ui,sans-serif;
+  --body:"Gowun Dodum",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12171B; --paper:#1B2228; --paperfill:#1B2228; --ink:#E7ECEF; --muted:#A3AEB5;
+  --pencil:#A8B3BA; --new:#FF8466; --accent:#8DB3FF; --accent-soft:#25324A;
+  --line:#33465A; --grid:#232D36; --chip:#232B32;
+  --c1:#C9A23A; --c2:#5E9D6C; --c3:#4D74B6; --c4:#C27272; --c5:#C9782E; --c6:#93704D; --grass:#7CC48A; --sweat:#6EA8C8;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171B; --paper:#1B2228; --paperfill:#1B2228; --ink:#E7ECEF; --muted:#A3AEB5;
+  --pencil:#A8B3BA; --new:#FF8466; --accent:#8DB3FF; --accent-soft:#25324A;
+  --line:#33465A; --grid:#232D36; --chip:#232B32;
+  --c1:#C9A23A; --c2:#5E9D6C; --c3:#4D74B6; --c4:#C27272; --c5:#C9782E; --c6:#93704D; --grass:#7CC48A; --sweat:#6EA8C8;
+  color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:2.1rem}
+.lead{margin:6px 0 0;color:var(--muted);max-width:60ch}
+
+.ask{display:flex;flex-direction:column;gap:10px}
+.ask label{font-family:var(--display);font-size:1.15rem}
+.askForm{display:flex;flex-direction:column;gap:10px}
+.askForm label,.qlabel{font-family:var(--display);font-size:1.1rem}
+.askForm label b,.qlabel b{display:inline-grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--accent);color:var(--paper);font-weight:400;font-size:.85em;margin-right:6px}
+.askForm .field{flex:none}
+.btn.go{align-self:flex-start;padding-inline:28px}
+.studio{background:var(--paper);border:2px dashed var(--accent);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.studio[hidden]{display:none}
+.fix{display:flex;flex-direction:column;gap:6px;border-top:2px dashed var(--line);padding-top:12px}
+.fix[hidden]{display:none}
+.fix label{font-family:var(--display);font-size:1.05rem}
+.fix textarea{font:inherit;font-size:1rem;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);resize:vertical;min-height:4.5em}
+.fix textarea:focus-visible{outline:none;border-color:var(--accent)}
+.fix-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fix-row .saveMsg{width:auto;text-align:left}
+.fix-note{margin:0;font-size:.82rem;color:var(--muted)}
+.studio-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.studio-head h2{font-size:1.3rem}
+.tag{font-size:.78rem;padding:2px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.studio-note{margin:0;color:var(--muted);font-size:.92rem;max-width:70ch}
+.cover-wrap{overflow-x:auto}
+.cover{border-collapse:collapse;width:100%;min-width:480px;font-size:.92rem}
+.cover th,.cover td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:middle}
+.cover th{font-family:var(--display);font-weight:400;color:var(--muted)}
+.cover .st{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cover .pill{font-size:.78rem;padding:2px 9px;border-radius:999px;border:1.5px solid var(--line)}
+.cover .pill.book{border-color:var(--accent);background:var(--accent-soft)}
+.cover .pill.saved{border-color:var(--grass);background:color-mix(in srgb,var(--c2) 25%,var(--paper))}
+.cover button{font-size:.8rem;padding:2px 10px;border-radius:999px;border:1.5px solid var(--line);background:transparent}
+.cover button.make{border-color:var(--accent);color:var(--accent)}
+.studio-foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.studio-foot .saveMsg{width:auto;text-align:left}
+.ask-row{display:flex;gap:8px;flex-wrap:wrap}
+.field{flex:1 1 260px;min-width:0;position:relative;display:flex}
+.field input::-webkit-search-cancel-button{display:none}
+.clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:var(--chip);color:var(--muted);font-size:1.3rem;line-height:1}
+.ask input{flex:1 1 auto;padding-right:46px !important;min-width:0;font:inherit;font-size:1.1rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+.ask input:focus-visible{outline:none;border-color:var(--accent)}
+button{font:inherit;cursor:pointer;color:inherit}
+.btn{font-family:var(--display);font-size:1.05rem;padding:10px 18px;border-radius:12px;border:2px solid var(--accent);background:var(--accent);color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chips small{color:var(--muted);font-size:.85rem}
+.chip{padding:5px 13px;border-radius:999px;background:var(--chip);border:1.5px solid var(--line);font-size:.95rem}
+.chip.book{border-color:var(--accent);background:var(--accent-soft)}
+
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lv{text-align:left;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--paper);display:flex;flex-direction:column;gap:2px}
+.lv span{font-family:var(--display);font-size:1.15rem}
+.lv small{color:var(--muted);font-size:.82rem;line-height:1.35}
+.lv[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media (min-width:860px){.main{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+
+.pad{background:var(--paper);border-radius:8px;padding:12px;box-shadow:0 10px 30px -20px rgba(20,30,40,.4);display:flex;flex-direction:column;gap:8px;min-width:0}
+.pad-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.pad-head h2{font-size:1.3rem}
+.views{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:560px}
+.views button{padding:10px 4px;border-radius:10px;border:2px solid var(--line);background:var(--paper);font-family:var(--display);font-size:.95rem;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:1px}
+.views button small{font-family:var(--body);font-size:.7rem;color:var(--muted)}
+.views button[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:420px){.views{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.save{margin-left:auto;font-size:.88rem;padding:5px 12px;border-radius:999px;border:1.5px solid var(--accent);background:var(--accent);color:var(--paper)}
+.save + .redo{margin-left:0}
+.saveMsg{font-size:.82rem;color:var(--muted);width:100%;text-align:right}
+.saveMsg:empty{display:none}
+.chip.saved{border-color:var(--grass);background:color-mix(in srgb,var(--c2) 25%,var(--paper))}
+.redo{margin-left:auto;font-size:.88rem;padding:5px 12px;border-radius:999px;border:1.5px solid var(--new);background:transparent;color:var(--new)}
+.src{font-size:.8rem;color:var(--muted)}
+.canvas{position:relative;border:2px solid var(--line);border-radius:6px;background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:10% 10%}
+.canvas svg{display:block;width:100%;height:auto}
+.status{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;font-size:1.05rem;color:var(--muted);background:color-mix(in srgb,var(--paper) 88%,transparent)}
+.status p{margin:0;max-width:30ch}
+.status[hidden]{display:none}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px;background:var(--pencil)}
+.legend span.n::before{background:var(--new)}
+
+#art{stroke-linecap:round;stroke-linejoin:round}
+#art .old{color:var(--pencil)}
+#art .new{color:var(--new)}
+#art .old .gr{color:var(--grass)}
+#art .new .d{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){#art .new .d{animation:none;stroke-dasharray:none;stroke-dashoffset:0}}
+
+.guide{display:flex;flex-direction:column;gap:14px;min-width:0}
+.now{display:flex;flex-direction:column;gap:2px;padding-inline:4px;min-height:5.5em}
+.now .num{font-family:var(--display);color:var(--new);font-size:.9rem;letter-spacing:.04em}
+.now h3{font-size:1.35rem}
+.now p{margin:0;font-size:1.05rem}
+.nav{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+.nav .btn{padding-block:12px;font-size:1.15rem}
+.canvas{max-width:min(100%,62vh);margin-inline:auto;width:100%}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.steps button{width:100%;text-align:left;display:flex;gap:10px;align-items:center;padding:7px 10px;border-radius:10px;border:0;background:transparent;font-size:.98rem}
+.steps button i{font-style:normal;flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);font-family:var(--display);font-size:.85rem;font-variant-numeric:tabular-nums}
+.steps button.done i{background:var(--pencil);border-color:var(--pencil);color:var(--paper)}
+.steps button.cur{background:var(--accent-soft)}
+.steps button.cur i{border-color:var(--new);color:var(--new)}
+.keep{border:2px dashed var(--line);border-radius:16px;padding:14px 16px}
+.keep h3{font-size:1.05rem;margin-bottom:6px}
+.keep ol{margin:0;padding-left:1.3em}
+.foot{font-size:.85rem;color:var(--muted);margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>그림일기 백과</h1>
+    <p class="lead">"달리는 사람은 어떻게 그려?" 하고 물어볼 때 펼쳐 보는 저학년 그림 백과예요. 그리고 싶은 것을 쓰면, 선을 하나씩 더해 가며 그리는 순서를 보여줘요.</p>
+  </header>
+
+  <section class="ask" aria-label="그릴 것 찾기">
+    <form class="askForm" id="askForm">
+      <label for="q"><b>1</b> 무엇을 그리고 싶나요?</label>
+      <div class="field">
+        <input id="q" type="search" enterkeyhint="search" value="가방 메고 걷는 초등학생" autocomplete="off" placeholder="예: 줄넘기하는 아이">
+        <button type="button" class="clear" id="clear" aria-label="지우기">×</button>
+      </div>
+      <div class="chips" id="sugg"></div>
+      <span class="qlabel" id="vlabel"><b>2</b> 어느 쪽에서 본 모습을 그릴까요?</span>
+      <div class="views" role="radiogroup" aria-labelledby="vlabel" id="views"></div>
+      <button class="btn go" type="submit" id="go">그리는 법 보기</button>
+    </form>
+  </section>
+
+
+  <div class="main">
+    <article class="pad" aria-label="연습장">
+      <div class="pad-head"><h2 id="subjectTitle"></h2><span class="src" id="src"></span><button type="button" class="save" id="save" hidden>백과에 저장</button><button type="button" class="redo" id="redo" hidden>그림이 이상해요, 다시 그리기</button><button type="button" class="redo" id="unsave" hidden>저장 지우기</button><button type="button" class="redo" id="exact" hidden>쓴 문장 그대로 새로 그리기</button><span class="saveMsg" id="saveMsg" role="status"></span></div>
+      <div class="canvas">
+        <svg id="art" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="2.2" role="img" aria-label="그리는 순서 그림"></svg>
+        <div class="status" id="status" hidden><p id="statusText"></p></div>
+      </div>
+      <div class="nav">
+        <button class="btn ghost" id="prev" type="button">← 이전</button>
+        <button class="btn" id="next" type="button">다음 →</button>
+      </div>
+      <div class="now" aria-live="polite">
+        <span class="num" id="stepNum"></span>
+        <h3 id="stepTitle"></h3>
+        <p id="stepTip"></p>
+      </div>
+      <div class="legend"><span class="n">지금 그릴 선</span><span>앞에서 그린 선</span></div>
+      <form class="fix" id="fixForm" hidden>
+        <label for="fix">이 그림에서 고칠 점</label>
+        <textarea id="fix" rows="3" placeholder="예: 왼팔을 뒤로 쭉 펴 주세요. 손목은 꺾지 말고요. 책상을 조금 낮게 해 주세요."></textarea>
+        <div class="fix-row"><button class="btn" type="submit" id="fixGo">고쳐 그리기</button><span class="saveMsg" id="fixMsg" role="status"></span></div>
+        <p class="fix-note">고칠 점을 쓰면 Claude가 지금 그림을 바탕으로 그 부분만 고쳐요. 마음에 들면 위의 <b>백과에 저장</b>을 눌러 주세요. 나에게만 보여요.</p>
+      </form>
+    </article>
+
+    <section class="guide">
+      <ol class="steps" id="steps"></ol>
+      <div class="keep">
+        <h3 id="keepTitle">꼭 기억할 세 가지</h3>
+        <ol id="keep"></ol>
+      </div>
+    </section>
+  </div>
+  <section class="studio" id="studio" hidden aria-label="운영자 작업실">
+    <div class="studio-head"><h2>운영자 작업실</h2><span class="tag">나에게만 보여요</span></div>
+    <p class="studio-note">백과에 어떤 그림이 어느 방향으로 채워져 있는지 보여줘요. 빈칸의 <b>만들기</b>를 누르면 Claude가 그 방향으로 새로 그리고, 마음에 들면 위에서 <b>백과에 저장</b>을 눌러요. 방문자에게는 백과와 저장한 그림만 보이고, 새로 만들기·저장·지우기 버튼은 보이지 않아요.</p>
+    <div class="cover-wrap"><table class="cover"><thead><tr><th scope="col">그림</th><th scope="col">정면</th><th scope="col">옆 (왼쪽·오른쪽)</th><th scope="col">뒷모습</th></tr></thead><tbody id="cover"></tbody></table></div>
+    <div class="studio-foot">
+      <button type="button" class="btn ghost" id="export">저장한 그림 내보내기 (JSON 파일)</button>
+      <span class="saveMsg" id="exportMsg" role="status"></span>
+    </div>
+    <p class="studio-note">저장한 그림은 Claude에 로그인한 사람에게만 보여요. 서비스로 열기 전에 Claude에게 "저장한 그림을 페이지에 넣어줘"라고 말하면, 로그인하지 않은 사람도 볼 수 있게 페이지 안에 넣어 드려요. 내보낸 JSON 파일은 나중에 직접 만드는 서비스로 옮길 때 쓸 수 있어요.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const T=(x,y,s=1)=>`translate(${x} ${y}) scale(${s})`;
+const g=(tf,s)=>`<g transform="${tf}" stroke-width="1.15">${s}</g>`;
+const ground=y=>`<line class="d" x1="20" y1="${y}" x2="280" y2="${y}"/>`;
+/* 잔디: 땅 아래 연두색, 땅 위에는 풀잎 세 개씩 묶음(가운데 길게, 양옆 짧게 바깥으로) */
+const TUFT=[[28,1],[52,.8],[71,1.1],[98,.9],[121,1.2],[146,.8],[170,1],[193,1.1],[219,.85],[243,1.15],[266,.9]];
+const grass=y=>`<rect x="20" y="${y}" width="260" height="14" rx="3" fill="var(--c2)" opacity=".45" stroke="none"/><g class="gr" stroke-width="1.6">${TUFT.map(([x,k])=>`<path class="d" d="M${x} ${y} q${-1*k} ${-5*k} ${-4.5*k} ${-7.5*k} M${x+1} ${y} q0 ${-6*k} ${1.5*k} ${-11*k} M${x+2} ${y} q${1*k} ${-5*k} ${5*k} ${-7*k}"/>`).join("")}</g>`;
+const pts=a=>a.map(p=>p.join(",")).join(" ");
+const tube=(a,w=7,c="--paperfill")=>`<polyline class="d" points="${pts(a)}" stroke-width="${w}"/><polyline class="d" points="${pts(a)}" stroke="var(${c})" stroke-width="${w-2.3}"/>`;
+const lerp=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+const deg=(a,b)=>Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;
+/* 손: 손등과 손바닥, 붙어 있는 네 손가락(사이 선 두 개), 아래로 따로 나온 엄지. 손목이 (0,0) */
+/* 엄지는 몸 앞쪽(F 방향)을 향하게 자동으로 뒤집어요. 뒷모습에서는 엄지가 손에 가려 안 보여요 */
+const hand=(el,h,F=[1,-1],thumb=true,kind="open")=>{let a=deg(el,h);
+  /* relax: 팔을 벌린 손은 손목이 힘없이 살짝 아래로 처져요 */
+  if(kind==="relax"){ const d=((90-a+540)%360)-180; a+=Math.max(-15,Math.min(15,d)); thumb=false; }
+  const r=a*Math.PI/180,t=[-Math.sin(r),Math.cos(r)],flip=t[0]*F[0]+t[1]*F[1]<0, tf=`translate(${h[0]} ${h[1]}) rotate(${a})${flip?" scale(1 -1)":""}`;
+  if(kind==="fist") /* 달릴 때: 가볍게 쥔 주먹. 손가락 마디 선과 그 위를 감싸는 엄지 */
+    return `<g transform="${tf}"><path class="d" d="M-1.2 -2.6 C1.6 -3.4 5 -3.8 6.8 -2.6 C8.4 -1.4 8.4 1.8 6.8 3 C5 4.2 1.4 3.8 -1.2 2.6" fill="var(--paperfill)"/><path class="d" d="M6.9 -1.1 L4.9 -1 M7 0.6 L5 0.6 M6.6 2.2 L4.8 2" stroke-width=".7"/>${thumb?`<path class="d" d="M0.8 3 Q4 4.4 5.6 2.2" stroke-width=".9"/>`:""}</g>`;
+  /* 편 손: 둥근 손바닥 + 따로따로 보이는 짧은 손가락 네 개(가운데가 제일 길어요) + 옆으로 나온 엄지 */
+  const FG=[[4,-2,8.3,-3.1],[4.4,-0.7,9.5,-1.2],[4.4,0.7,9.2,0.9],[4,2,7.9,2.7]], TH=[1.6,2.4,4.6,5.4];
+  const seg=(f,w,c)=>`<line ${c?'':'class="d" '}x1="${f[0]}" y1="${f[1]}" x2="${f[2]}" y2="${f[3]}" stroke-width="${w}"${c?` stroke="${c}"`:''}/>`;
+  const parts=[...FG,...(thumb?[TH]:[])];
+  return `<g transform="${tf}" stroke-linecap="round">${parts.map(f=>seg(f,2.15)).join("")}${parts.map(f=>seg(f,.95,"var(--paperfill)")).join("")}<ellipse class="d" cx="2.2" cy="0" rx="3.3" ry="3" fill="var(--paperfill)"/></g>`;};
+/* 몸통: 어깨는 둥글고, 가슴은 살짝 나오고, 허리 쪽으로 조금 좁아지는 옆모습 */
+const torsoTf=(S,P)=>`translate(${S[0]} ${S[1]}) rotate(${deg(S,P)-90})`;
+const torsoPath=L=>`M-6 0 Q0 -4.5 6 0 Q10.6 ${L*.3} 7.6 ${L*.6} Q6.4 ${L*.82} 7 ${L+2} L-7 ${L+2} Q-6.2 ${L*.62} -7.8 ${L*.3} Q-8.6 ${L*.06} -6 0 Z`;
+const shirtPath=L=>`M-6.6 -0.6 Q0 -5.2 6.6 -0.6 Q11.4 ${L*.3} 8.3 ${L*.6} Q7.4 ${L*.85} 8.6 ${L+5} Q0 ${L+6.6} -8.6 ${L+5} Q-6.9 ${L*.62} -8.5 ${L*.3} Q-9.3 ${L*.06} -6.6 -0.6 Z`;
+const torsoOpen=L=>`M7 ${L+2} Q6.4 ${L*.82} 7.6 ${L*.6} Q10.6 ${L*.3} 6 0 Q0 -4.5 -6 0 Q-8.6 ${L*.06} -7.8 ${L*.3} Q-6.2 ${L*.62} -7 ${L+2}`;
+const len=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
+const neckS=(H,S)=>{const n1=lerp(H,S,9/len(H,S));return `<line class="d" x1="${n1[0]}" y1="${n1[1]}" x2="${S[0]}" y2="${S[1]}" stroke-width="5.4"/><line class="d" x1="${n1[0]}" y1="${n1[1]}" x2="${S[0]}" y2="${S[1]}" stroke="var(--paperfill)" stroke-width="3.1"/>`;};
+const headS=H=>`<circle class="d" cx="${H[0]}" cy="${H[1]}" r="12" fill="var(--paperfill)"/>`;
+const hairS=(H,a=0,c="currentColor")=>`<g transform="translate(${H[0]} ${H[1]}) rotate(${a})"><path class="d" d="M-12.2 2 Q-13.5 -12 0 -12.6 Q10.5 -12.2 12.4 -3.5 Q5 -7.5 -2 -6 Q-6 -3 -6.5 3 Q-9.5 5 -12.2 2 Z" fill="${c==="currentColor"?c:`var(${c})`}"/></g>`;
+/* 표정: happy(기본) / surprised(깜짝 놀람) / sad(슬픔) / angry(화남). 그릴 때의 EXPR 값을 따라요 */
+let EXPR="happy";
+const EXPRNAME={happy:"웃는 얼굴",surprised:"깜짝 놀란 얼굴",sad:"슬픈 얼굴",angry:"화난 얼굴"};
+const exprOf=t=>/놀라|놀랐|놀란|놀래|깜짝|화들짝/.test(t)?"surprised":/슬프|슬퍼|슬펐|슬픈|울었|울어|우는|울고|울며|울면|엉엉|속상|눈물/.test(t)?"sad":/화가|화나|화났|화난|화를|짜증|씩씩/.test(t)?"angry":"happy";
+const marks=(y=-17)=>EXPR==="surprised"?`<path class="d" d="M-7 ${y+1} l-3 -5 M0 ${y-.5} l0 -6 M7 ${y+1} l3 -5" stroke-width="1.1"/>`:"";
+const faceS=(H,a=0)=>{const e=EXPR, nose=`<path class="d" d="M11.8 -0.5 L14.6 3.2 L11.6 4.3" fill="var(--paperfill)"/>`, ear=`<path class="d" d="M-3.4 -2.4 Q-6.8 0.5 -3.4 4.2"/>`, blush=`<circle cx="3" cy="3.6" r="2.2" fill="var(--c4)" stroke="none" opacity=".7"/>`;
+  const eye=e==="surprised"?`<circle class="d" cx="5.6" cy="-1.6" r="2.6" fill="var(--paperfill)" stroke-width=".9"/><circle cx="6.2" cy="-1.6" r="1.2" fill="currentColor" stroke="none"/>`:`<circle cx="5.5" cy="-1.5" r="1.6" fill="currentColor" stroke="none"/>`;
+  const brow={happy:"M3.5 -5 Q5.5 -6 7.5 -5",surprised:"M3 -7.4 Q5.6 -9.4 8.2 -7.6",sad:"M3.4 -4.6 L7.8 -6.6",angry:"M3.4 -6.6 L7.8 -4.2"}[e];
+  const mouth={happy:`<path class="d" d="M4.2 6.8 Q7.4 9 10.2 6.2"/>`,surprised:`<ellipse class="d" cx="8.4" cy="7.4" rx="1.8" ry="2.4" fill="currentColor"/>`,sad:`<path class="d" d="M4.6 8.2 Q7.4 5.6 10.2 7.6"/>`,angry:`<path class="d" d="M4.8 7.4 L10 6.8"/>`}[e];
+  const tear=e==="sad"?`<path class="d" d="M5 2 q-1.8 2.8 0 3.4 q1.8 -0.6 0 -3.4z" fill="var(--sweat)" stroke-width=".8"/>`:"";
+  return `<g transform="translate(${H[0]} ${H[1]}) rotate(${a})">${eye}<path class="d" d="${brow}"/>${nose}${ear}${mouth}${blush}${tear}${marks()}</g>`;};
+const joints=a=>`<g stroke-dasharray="2 2.5" stroke-width="1.3">${a.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.6"/>`).join("")}</g>`;
+/* 운동화: 앞코가 둥근 몸통 + 흰 밑창 + 끈. 발목 뒤꿈치가 (0,0), 앞코는 오른쪽 */
+const shoe=(A,ang,c="--c5")=>`<g transform="translate(${A[0]} ${A[1]}) rotate(${ang})"><path class="d" d="M-3.8 3.4 L9.4 3.4 Q11.2 3.6 10.8 5.2 L10.4 6 L-3.4 6 Q-4.8 6 -4.6 4.6 Z" fill="var(--paperfill)"/><path class="d" d="M-3.8 -3.4 Q-1 -5 1.6 -4.4 L4.6 -2 Q9.4 -1.4 10.2 1.4 Q10.4 3.2 9.2 3.4 L-3.8 3.4 Q-5 0 -3.8 -3.4 Z" fill="var(${c})"/><path class="d" d="M1.4 -3.2 L3.4 -0.6 M3.4 -2.6 L5.4 -0.2" stroke-width="1"/><path class="d" d="M-3.6 1.2 L3 1.2" stroke-width=".8"/></g>`;
+/* 맨발: 발등 + 발가락 다섯 개 + 발바닥 선 */
+const foot=(K,A)=>`<g transform="translate(${A[0]} ${A[1]}) rotate(${deg(K,A)}) scale(1.35)"><path class="d" d="M-1.5 -2.6 Q4 -3.6 7.6 -2.6 Q9.4 -1 7.8 2 Q3.5 3.4 -1.5 2.6" fill="var(--paperfill)"/><path class="d" d="M7.6 -2.4 q1.8 0.4 1.2 1.6 M8.6 -0.8 q1.6 0.5 0.9 1.5 M8.4 0.8 q1.4 0.6 0.6 1.4" stroke-width=".8"/><path class="d" d="M0 2.4 Q4 3.2 7.4 1.8" stroke-width=".8"/></g>`;
+const shorts=(hB,kB,hF,kF,c)=>{const q=pts([lerp(hB,kB,.55),hB,hF,lerp(hF,kF,.55)]);return `<g stroke-linecap="butt" stroke-linejoin="round"><polyline class="d" points="${q}" stroke-width="9.8"/><polyline class="d" points="${q}" stroke="var(${c})" stroke-width="7.5"/></g>`;};
+/* 긴팔: 따로 소매를 그리지 않고, 이미 그린 팔을 손목 가까이까지 옷 색으로 칠해요 */
+const sleeve=(A,arm,c)=>{const [E,H]=arm, W=lerp(E,H,.8), q=pts([A,E,W]);return `<g stroke-linecap="butt" stroke-linejoin="round"><polyline points="${q}" stroke="var(${c})" stroke-width="4.75"/><circle cx="${A[0]}" cy="${A[1]}" r="2.35" fill="var(${c})" stroke="none"/></g>`;};
+
+/* 관절 검사: 오른쪽을 보는 옆모습에서 팔꿈치는 앞으로만, 무릎은 뒤로만(정강이가 뒤쪽) 굽혀져요. 반대로 꺾였으면 바로잡아요 */
+const crossZ=(a,b,c)=>(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);
+const reflectOn=(a,c,p)=>{const dx=c[0]-a[0],dy=c[1]-a[1],t=((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy),q=[a[0]+t*dx,a[1]+t*dy];return [2*q[0]-p[0],2*q[1]-p[1]];};
+const fixJoint=(a,limb,sign)=>{const [m,e,...rest]=limb; return crossZ(a,m,e)*sign<0?[reflectOn(a,e,m),e,...rest]:limb;};
+function person(o){
+  if(o.fix!==false){ const S0=o.S, P0=o.P, L0=Math.hypot(P0[0]-S0[0],P0[1]-S0[1]), uu=[(P0[0]-S0[0])/L0,(P0[1]-S0[1])/L0], A0=[S0[0]+uu[0]*5,S0[1]+uu[1]*5];
+    o={...o, armF:fixJoint(A0,o.armF,-1), armB:fixJoint(A0,o.armB,-1), legF:fixJoint(P0,o.legF,1), legB:fixJoint(P0,o.legB,1)}; }
+  const {H,S,P,armF,armB,legF,legB,shirt,pants,face=0,hands="open"}=o, L=len(S,P), tf=torsoTf(S,P);
+  const u=[(P[0]-S[0])/L,(P[1]-S[1])/L], n=[u[1],-u[0]];          /* u: 몸 아래쪽, n: 가슴 쪽 */
+  const A=[S[0]+u[0]*5,S[1]+u[1]*5];                           /* 어깨: 몸통 맨 위 둥근 곳 */
+  const hipF=[P[0]+n[0]*3.2,P[1]+n[1]*3.2], hipB=[P[0]-n[0]*3.2,P[1]-n[1]*3.2]; /* 다리는 엉덩이 양쪽에서 */
+  return {
+    head:headS(H), hair:hairS(H,face), face:faceS(H,face),
+    torso:neckS(H,S)+`<g transform="${tf}"><path d="${torsoPath(L)}" fill="var(--paperfill)" stroke="none"/><path class="d" d="${torsoOpen(L)}"/></g>`,
+    shirt:`<g transform="${tf}"><path class="d" d="${shirtPath(L)}" fill="var(${shirt})"/></g>`,
+    torsoBottom:`<g transform="${tf}"><line class="d" x1="-7" y1="${L+2}" x2="7" y2="${L+2}"/></g>`,
+    tf, L, A, hipF, hipB,
+    backArm:tube([A,...armB])+hand(armB[0],armB[1],[1,-1],true,hands),
+    backLimbs:tube([A,...armB])+hand(armB[0],armB[1],[1,-1],true,hands)+tube([hipB,...legB]),
+    frontLeg:tube([hipF,...legF]), frontArm:tube([A,...armF])+hand(armF[0],armF[1],[1,-1],true,hands),
+    joints:joints([armF[0],armB[0],legF[0],legB[0]]),
+    shorts:shorts(hipB,legB[0],hipF,legF[0],pants),
+    sleeves:sleeve(A,armF,shirt), sleeveB:sleeve(A,armB,shirt),
+  };
+}
+
+/* 사람 그림은 표정마다 한 번씩 만들어 둬요 */
+const MOUTHWORD={happy:"웃는 입",surprised:"동그랗게 벌린 입",sad:"아래로 처진 입",angry:"꾹 다문 입"};
+const EXPRTIP={surprised:" 깜짝 놀란 얼굴은 눈을 동그랗고 크게, 눈썹은 이마 쪽으로 높이 올리고, 입은 작은 O 모양으로 벌려요. 머리 위에 짧은 선 세 개를 그으면 더 놀란 것 같아요.",
+  sad:" 슬픈 얼굴은 눈썹 안쪽(코 쪽)을 올리고, 입꼬리는 아래로 내려요. 눈 밑에 눈물방울을 하나 그려요.",
+  angry:" 화난 얼굴은 눈썹 안쪽(코 쪽)을 아래로 내려 V 모양으로 만들고, 입은 꾹 다물어요."};
+const EXPRKEEP={surprised:"깜짝 놀란 얼굴: 동그란 눈, 높이 올린 눈썹, O 모양 입",sad:"슬픈 얼굴: 안쪽이 올라간 눈썹, 처진 입, 눈물",angry:"화난 얼굴: V 모양 눈썹, 꾹 다문 입"};
+function makePeople(){
+/* ---------- 달리는 아이 ---------- */
+const RP=person({H:[4,1],S:[0,16],P:[-8,48],A:[-1,19],
+  armF:[[9,31],[21,24]], armB:[[-15,31],[-16.5,42.5]],
+  legF:[[9,60],[5,81]], legB:[[-14,68],[-32,74]], shirt:"--c1", pants:"--c3", hands:"fist"});
+const RUN=T(172,48,2), rg=s=>g(RUN,s);
+const rShoes=shoe([4.5,80.2],0,"--c5")+shoe([-32,74],62,"--c5");
+const speed=`<line class="d" x1="-44" y1="18" x2="-62" y2="18"/><line class="d" x1="-48" y1="36" x2="-72" y2="36"/><line class="d" x1="-52" y1="54" x2="-68" y2="54"/>`;
+const RUN_LV={keep:["몸통은 동그라미가 아니라 길쭉하게","몸은 달리는 쪽으로 기울이기","팔다리는 앞뒤로 반대로, 뒷발은 땅에서 떼기"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽에 머리 동그라미를 그려요. 머리는 몸 전체 키의 4분의 1쯤으로, 너무 크지 않게 그려요.",els:[{z:1,svg:ground(220)},{z:40,svg:rg(RP.head)}]},
+  {t:"목과 몸통",tip:"짧은 목 아래에 몸통을 그려요. 몸통은 동그라미가 아니라 필통처럼 길쭉해요. 어깨는 둥글게, 가슴은 살짝 앞으로 나오게, 아래는 조금 좁게 그리고 달리는 쪽으로 기울여요.",els:[{z:20,svg:rg(RP.torso)},{z:20.1,until:2,svg:rg(RP.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 팔은 몸통 윗부분에서, 다리는 몸통 맨 아래에서 시작해요.",els:[{z:50,until:3,svg:rg(RP.joints)}]},
+  {t:"팔다리와 손",tip:"팔은 몸통 맨 위 둥근 어깨에서, 다리는 몸통 아래 양쪽 엉덩이에서 이어 그려요. 다리를 붙인 뒤 몸통 아래 선은 지우개로 지우면 몸과 다리가 자연스럽게 이어져요. 동그라미를 지나가게 두 줄로 팔다리를 그려요. 앞다리는 무릎을 들고, 뒷다리는 뒤로 차올려 발이 땅에서 떨어지게 해요. 달릴 때 손은 가볍게 주먹을 쥐어요. 동그스름한 주먹에 손가락 마디 선을 짧게 긋고, 엄지는 그 위를 감싸요.",els:[{z:10,svg:rg(RP.backLimbs)},{z:19,svg:rg(RP.frontLeg)},{z:30,svg:rg(RP.frontArm)}]},
+  {t:"옷 입히기",tip:"몸통에 긴팔 티셔츠를 입혀 색칠하고, 팔은 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 다리 윗부분에는 반바지를 그려요.",els:[{z:10.5,svg:rg(RP.sleeveB)},{z:20.5,svg:rg(RP.shorts)},{z:21,svg:rg(RP.shirt)},{z:31.5,svg:rg(RP.sleeves)}]},
+  {t:"운동화 신기",tip:"발목 끝에 앞코가 둥근 운동화를 그리고, 아래에 납작한 밑창을 따로 그려요. 신발 끈은 두 줄이에요. 뒤로 민 발은 앞코가 아래를 향하고 밑창이 뒤쪽으로 보여요.",els:[{z:32,svg:rg(rShoes)}]},
+  {t:"얼굴과 속도선",tip:"머리카락을 그리고, 얼굴 옆에 귀, 앞쪽에 코, 눈썹과 눈, 웃는 입을 그려요. 등 뒤에 짧은 선 세 개를 그으면 '슝' 하고 빨라 보여요.",els:[{z:42,svg:rg(RP.hair+RP.face)},{z:3,svg:rg(speed)}]},
+  {t:"잔디 그리기",tip:"땅 선 위에 풀잎을 세 개씩 묶어서 그려요. 가운데 풀잎은 길게 위로, 양옆 풀잎은 짧게 바깥으로 휘게 그려요. 묶음 사이 간격과 키를 조금씩 다르게 하면 진짜 잔디 같아요. 땅 선 아래는 연두색으로 칠해요.",els:[{z:2,svg:grass(220)}]}]};
+const RUNNER={name:"달리는 아이", levels:[RUN_LV,RUN_LV,RUN_LV]};
+
+/* ---------- 가방 메고 걷는 아이 ---------- */
+const WP=person({H:[1,1],S:[0,16],P:[-1,48],A:[-1,19],
+  armF:[[4,33],[9,45]], armB:[[-6,33],[-9,46]],
+  legF:[[4,67],[8,86]], legB:[[-5,67],[-10,86]], shirt:"--c2", pants:"--c3"});
+const WALK=T(150,46,2), wg=s=>g(WALK,s);
+const wShoes=shoe([8,82.2],0,"--c4")+shoe([-10,82.2],0,"--c4");
+const wBag=`<g transform="${WP.tf}"><rect class="d" x="-17" y="1" width="12" height="28" rx="4" fill="var(--c3)"/><rect class="d" x="-16" y="15" width="8" height="10" rx="2.5"/></g>`;
+const wStrap=`<g transform="${WP.tf}"><path class="d" d="M-3 -1.5 Q7 6 2.5 24" stroke-width="2.6"/><path class="d" d="M-3 -1.5 Q7 6 2.5 24" stroke="var(--c3)" stroke-width="1.2"/></g>`;
+const WALK_LV={keep:["몸통은 동그라미가 아니라 길쭉하게, 똑바로 세우기","다리는 ㅅ자, 두 발 모두 땅에 닿기","가방은 몸통 뒤에, 어깨끈은 앞으로"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요. 머리는 몸 전체 키의 4분의 1쯤이에요.",els:[{z:1,svg:ground(222)},{z:40,svg:wg(WP.head)}]},
+  {t:"목과 몸통",tip:"짧은 목 아래에 몸통을 그려요. 몸통은 동그라미가 아니라 필통처럼 길쭉해요. 어깨는 둥글게, 아래는 조금 좁게, 걸을 때는 거의 똑바로 세워요.",els:[{z:20,svg:wg(WP.torso)},{z:20.1,until:2,svg:wg(WP.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 걸을 때는 팔다리가 조금만 굽혀져요.",els:[{z:50,until:3,svg:wg(WP.joints)}]},
+  {t:"팔다리와 손",tip:"팔은 몸통 맨 위 둥근 어깨에서, 다리는 몸통 아래 양쪽 엉덩이에서 이어 그려요. 다리를 붙인 뒤 몸통 아래 선은 지우개로 지우면 몸과 다리가 자연스럽게 이어져요. 두 줄로 팔다리를 그려요. 다리는 ㅅ자로 벌리고 두 발 모두 땅에 닿게 해요. 팔 끝에는 손을 그려요. 손등에서 네 손가락을 붙여서 길게 뻗고, 손가락 사이에 선을 두 개 그어요. 엄지는 손바닥에서 따로 짧게 나오는데, 몸 앞쪽(팔을 내리면 앞, 팔을 들면 위)을 향해요.",els:[{z:10,svg:wg(WP.backLimbs)},{z:19,svg:wg(WP.frontLeg)},{z:30,svg:wg(WP.frontArm)}]},
+  {t:"가방 메기",tip:"몸통 뒤에 길쭉한 네모 가방을 그리고 앞주머니를 붙여요. 어깨끈은 어깨를 넘어 가슴 앞으로 내려와요.",els:[{z:12,svg:wg(wBag)},{z:22,svg:wg(wStrap)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠와 반바지를 그려 색칠해요. 팔은 손목 가까이까지 옷 색으로 칠해요.",els:[{z:10.5,svg:wg(WP.sleeveB)},{z:20.5,svg:wg(WP.shorts)},{z:21,svg:wg(WP.shirt)},{z:31.5,svg:wg(WP.sleeves)}]},
+  {t:"운동화 신기",tip:"두 발에 앞코가 둥근 운동화를 그려요. 아래에 납작한 밑창을 땅에 붙여 그리고, 신발 끈을 두 줄 그어요.",els:[{z:32,svg:wg(wShoes)}]},
+  {t:"얼굴",tip:"머리카락, 귀, 코, 눈썹과 눈, 웃는 입으로 마무리해요.",els:[{z:42,svg:wg(WP.hair+WP.face)}]},
+  {t:"잔디 그리기",tip:"땅 선 위에 풀잎을 세 개씩 묶어서 그려요. 가운데 풀잎은 길게 위로, 양옆 풀잎은 짧게 바깥으로 휘게 그려요. 묶음 사이 간격과 키를 조금씩 다르게 하면 진짜 잔디 같아요. 땅 선 아래는 연두색으로 칠해요.",els:[{z:2,svg:grass(222)}]}]};
+const WALKER={name:"가방 메고 걷는 아이", levels:[WALK_LV,WALK_LV,WALK_LV]};
+
+
+
+/* ---------- 정면 / 뒷모습 사람 ---------- */
+const FT=T(150,42,2), fg=s=>g(FT,s), bg=s=>`<g transform="translate(300 0) scale(-1 1)">${g(FT,s)}</g>`;
+const fTorso=L=>`M-6 -1.6 Q0 -3.2 6 -1.6 Q11 -0.6 11.6 4.5 Q10.6 ${L*.5} 9 ${L+2} L-9 ${L+2} Q-10.6 ${L*.5} -11.6 4.5 Q-11 -0.6 -6 -1.6 Z`;
+const fTorsoOpen=L=>`M9 ${L+2} Q10.6 ${L*.5} 11.6 4.5 Q11 -0.6 6 -1.6 Q0 -3.2 -6 -1.6 Q-11 -0.6 -11.6 4.5 Q-10.6 ${L*.5} -9 ${L+2}`;
+const fShirt=L=>`M-6.6 -2.2 Q0 -3.8 6.6 -2.2 Q12 -1.2 12.6 4.5 Q11.2 ${L*.55} 10.2 ${L+5} Q0 ${L+6.4} -10.2 ${L+5} Q-11.2 ${L*.55} -12.6 4.5 Q-12 -1.2 -6.6 -2.2 Z`;
+const earsF=`<path class="d" d="M-11.8 -2.4 Q-15.6 0.8 -11.8 4.2" fill="var(--paperfill)"/><path class="d" d="M11.8 -2.4 Q15.6 0.8 11.8 4.2" fill="var(--paperfill)"/>`;
+const faceFront=H=>{const e=EXPR;
+  const eyes=e==="surprised"?`<circle class="d" cx="-4.4" cy="-0.4" r="2.5" fill="var(--paperfill)" stroke-width=".9"/><circle class="d" cx="4.4" cy="-0.4" r="2.5" fill="var(--paperfill)" stroke-width=".9"/><circle cx="-4.4" cy="-0.2" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.4" cy="-0.2" r="1.1" fill="currentColor" stroke="none"/>`:`<circle cx="-4.4" cy="-0.4" r="1.7" fill="currentColor" stroke="none"/><circle cx="4.4" cy="-0.4" r="1.7" fill="currentColor" stroke="none"/>`;
+  const brows={happy:"M-6.4 -4.4 Q-4.4 -5.6 -2.4 -4.4 M2.4 -4.4 Q4.4 -5.6 6.4 -4.4",surprised:"M-6.8 -6.6 Q-4.4 -8.4 -2 -6.6 M2 -6.6 Q4.4 -8.4 6.8 -6.6",sad:"M-6.4 -4 L-2.4 -5.6 M2.4 -5.6 L6.4 -4",angry:"M-6.4 -5.8 L-2.2 -3.8 M2.2 -3.8 L6.4 -5.8"}[e];
+  const mouth={happy:`<path class="d" d="M-3.2 6.2 Q0 9 3.2 6.2"/>`,surprised:`<ellipse class="d" cx="0" cy="7" rx="1.9" ry="2.5" fill="currentColor"/>`,sad:`<path class="d" d="M-3.2 7.8 Q0 5.2 3.2 7.8"/>`,angry:`<path class="d" d="M-2.8 7 Q0 6.2 2.8 7"/>`}[e];
+  const tear=e==="sad"?`<path class="d" d="M-5 2 q-1.8 2.8 0 3.4 q1.8 -0.6 0 -3.4z" fill="var(--sweat)" stroke-width=".8"/>`:"";
+  return `<g transform="translate(${H[0]} ${H[1]})">${eyes}<path class="d" d="${brows}"/><path class="d" d="M-1 3.2 Q0 4.4 1 3.2"/>${mouth}<circle cx="-6.8" cy="3.6" r="2.1" fill="var(--c4)" stroke="none" opacity=".7"/><circle cx="6.8" cy="3.6" r="2.1" fill="var(--c4)" stroke="none" opacity=".7"/>${tear}${marks()}</g>`;};
+const hairFront=H=>`<g transform="translate(${H[0]} ${H[1]})">${earsF}<path class="d" d="M-12.3 1 Q-13.6 -13.4 0 -13.2 Q13.6 -13.4 12.3 1 Q11 -5.6 6 -6.6 Q2.6 -4.2 -1 -7 Q-7.6 -6.4 -12.3 1 Z" fill="currentColor"/></g>`;
+const hairBack=H=>`<g transform="translate(${H[0]} ${H[1]})">${earsF}<path class="d" d="M-12.4 4 Q-13.8 -13.4 0 -13.2 Q13.8 -13.4 12.4 4 Q11.6 9.4 0 10 Q-11.6 9.4 -12.4 4 Z" fill="currentColor"/><path d="M-1.6 -6.4 q3.4 -1.4 3.6 2" stroke="var(--paperfill)" stroke-width="1"/>${marks()}</g>`;
+const shoeF=(A,c,heel=false)=>`<g transform="translate(${A[0]} ${A[1]})"><path class="d" d="M-5 4.4 Q0 6.6 5 4.4 L5 6 Q0 8.4 -5 6 Z" fill="var(--paperfill)"/><path class="d" d="M-4.6 -1 Q-5.2 5 0 5.4 Q5.2 5 4.6 -1 Q0 -3.4 -4.6 -1 Z" fill="var(${c})"/>${heel?`<path class="d" d="M0 -2.2 L0 2.6" stroke-width=".9"/>`:`<path class="d" d="M-2 0.4 L2 0.4 M-2.2 2.2 L2.2 2.2" stroke-width=".8"/>`}</g>`;
+
+function frontPerson(o){
+  const {H,S,P,armL,armR,legL,legR,shirt,pants,hands="open"}=o, L=P[1]-S[1], tf=`translate(${S[0]} ${S[1]})`;
+  const AL=[S[0]-9.4,S[1]+5], AR=[S[0]+9.4,S[1]+5], HL=[P[0]-4.7,P[1]], HR=[P[0]+4.7,P[1]];
+  const neck=`<line class="d" x1="${H[0]}" y1="${H[1]+9}" x2="${S[0]}" y2="${S[1]+1}" stroke-width="7.4"/><line class="d" x1="${H[0]}" y1="${H[1]+9}" x2="${S[0]}" y2="${S[1]+1}" stroke="var(--paperfill)" stroke-width="5.1"/>`;
+  const q=pts([lerp(HL,legL[0],.55),HL,HR,lerp(HR,legR[0],.55)]);
+  return {
+    head:headS(H), face:faceFront(H), hairF:hairFront(H), hairB:hairBack(H),
+    torso:neck+`<g transform="${tf}"><path d="${fTorso(L)}" fill="var(--paperfill)" stroke="none"/><path class="d" d="${fTorsoOpen(L)}"/></g>`,
+    torsoBottom:`<g transform="${tf}"><line class="d" x1="-9" y1="${L+2}" x2="9" y2="${L+2}"/></g>`,
+    shirtF:`<g transform="${tf}"><path class="d" d="${fShirt(L)}" fill="var(${shirt})"/></g>`,
+    shirtB:`<g transform="${tf}"><path class="d" d="${fShirt(L)}" fill="var(${shirt})"/></g>`,
+    tf, L,
+    arms:tube([AL,...armL])+hand(armL[0],armL[1],[1,-.5],true,hands)+tube([AR,...armR])+hand(armR[0],armR[1],[-1,-.5],true,hands),
+    armsB:tube([AL,...armL])+hand(armL[0],armL[1],[1,-.5],false,hands)+tube([AR,...armR])+hand(armR[0],armR[1],[-1,-.5],false,hands),
+    armLs:tube([AL,...armL])+hand(armL[0],armL[1],[1,-.5],false,hands), armRs:tube([AR,...armR])+hand(armR[0],armR[1],[-1,-.5],false,hands),
+    legs:tube([HL,...legL])+tube([HR,...legR]),
+    joints:joints([armL[0],armR[0],legL[0],legR[0]]),
+    shorts:`<g stroke-linecap="butt" stroke-linejoin="round"><polyline class="d" points="${q}" stroke-width="9.8"/><polyline class="d" points="${q}" stroke="var(${pants})" stroke-width="7.5"/></g>`,
+    sleeves:sleeve(AL,armL,shirt)+sleeve(AR,armR,shirt), sleeveL:sleeve(AL,armL,shirt), sleeveR:sleeve(AR,armR,shirt),
+  };
+}
+
+/* 달리는 아이: 정면/뒷모습 (앞으로 흔든 팔과 반대쪽 다리를 들어요) */
+const RF=frontPerson({H:[0,1],S:[0,15],P:[0,48],
+  armL:[[-15.5,32],[-8,25]], armR:[[15,33],[16.5,45.5]],
+  legL:[[-5,67],[-5.5,85]], legR:[[7.5,58.5],[8.5,73.5]], shirt:"--c1", pants:"--c3", hands:"fist"});
+const runFrontShoes=(heel)=>shoeF([-5.5,85],"--c5",heel)+shoeF([8.5,73.5],"--c5",heel);
+const runFrontLines=`<path class="d" d="M-27 22 q-4 7 0 14 M-32 27 q-3 4 0 8 M27 22 q4 7 0 14 M32 27 q3 4 0 8"/><path class="d" d="M2 87 q2.5 -2 5 0 M9 88 q2.5 -2 5 0" stroke-width=".9"/>`;
+const runTorsoTip="짧은 목 아래에 몸통을 그려요. 앞이나 뒤에서 보면 어깨가 넓고, 아래로 갈수록 살짝 좁아져요. 아직은 몸통 아래 선을 그어 두세요.";
+const runLimbTip="팔은 몸통 위쪽 양옆 어깨에서, 다리는 몸통 아래 양쪽 엉덩이에서 이어 그려요. 한 팔은 팔꿈치를 굽혀 손이 가슴 앞으로 오고, 다른 팔은 뒤로 흔들어 몸 옆으로 내려가요. 앞으로 나온 팔과 반대쪽 다리는 무릎을 들어 발이 땅에서 떨어지고, 다른 다리는 땅을 딛어요. 다리를 붙인 뒤 몸통 아래 선은 지워요. 달릴 때 손은 가볍게 주먹을 쥐어요. 동그스름한 주먹에 손가락 마디 선을 짧게 긋고, 엄지는 그 위를 감싸요.";
+const gTip='땅 선 위에 풀잎을 세 개씩 묶어서 그려요. 가운데 풀잎은 길게 위로, 양옆 풀잎은 짧게 바깥으로 휘게 그려요. 묶음 사이 간격과 키를 조금씩 다르게 하면 진짜 잔디 같아요. 땅 선 아래는 연두색으로 칠해요.';
+const RUN_FRONT={keep:["앞으로 흔든 팔과 반대쪽 다리를 들기","땅을 딛는 발과 떠 있는 발 높이를 다르게","정면은 눈 두 개, 양쪽 귀가 다 보여요"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:fg(RF.head)}]},
+  {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:fg(RF.torso)},{z:20.1,until:2,svg:fg(RF.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 굽힌 팔과 든 무릎이 어디쯤인지 먼저 정해요.",els:[{z:50,until:3,svg:fg(RF.joints)}]},
+  {t:"팔다리와 손",tip:runLimbTip,els:[{z:19,svg:fg(RF.legs)},{z:30,svg:fg(RF.arms)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠를 입혀 색칠하고, 양쪽 팔은 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 다리 윗부분에는 반바지를 그려요.",els:[{z:20.5,svg:fg(RF.shorts)},{z:21,svg:fg(RF.shirtF)},{z:31.5,svg:fg(RF.sleeves)}]},
+  {t:"운동화 신기",tip:"앞에서 본 운동화는 둥근 앞코와 아래 밑창이 보여요. 신발 끈을 두 줄 그어요. 든 발은 땅에서 떨어져 있어요.",els:[{z:32,svg:fg(runFrontShoes(false))}]},
+  {t:"얼굴과 움직임 선",tip:"앞머리를 그리고, 눈 두 개, 눈썹, 작은 코, 웃는 입, 볼을 그려요. 양쪽에 귀도 그려요. 몸 양옆에 괄호 모양 선을 그으면 달리는 느낌이 나요.",els:[{z:42,svg:fg(RF.hairF+RF.face)},{z:3,svg:fg(runFrontLines)}]},
+  {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+const RUN_BACK={keep:["뒷모습은 얼굴 대신 뒤통수 머리카락","팔다리 모양은 정면과 같고 좌우만 바뀌어요","신발은 뒤꿈치가 보여요"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:bg(RF.head)}]},
+  {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:bg(RF.torso)},{z:20.1,until:2,svg:bg(RF.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 뒤에서 보면 정면과 좌우가 바뀌어요.",els:[{z:50,until:3,svg:bg(RF.joints)}]},
+  {t:"팔다리와 손",tip:runLimbTip+" 뒤에서 보면 앞으로 굽힌 팔의 손은 몸에 가려 안 보여요.",els:[{z:19,svg:bg(RF.legs)},{z:10,svg:bg(RF.armLs)},{z:30,svg:bg(RF.armRs)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠를 입혀 색칠하고, 양쪽 팔은 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 다리 윗부분에는 반바지를 그려요.",els:[{z:20.5,svg:bg(RF.shorts)},{z:21,svg:bg(RF.shirtB)},{z:10.5,svg:bg(RF.sleeveL)},{z:31.5,svg:bg(RF.sleeveR)}]},
+  {t:"운동화 신기",tip:"뒤에서 본 운동화는 둥근 뒤꿈치와 아래 밑창이 보여요. 뒤꿈치 가운데에 세로선을 하나 그어요.",els:[{z:32,svg:bg(runFrontShoes(true))}]},
+  {t:"뒷머리와 움직임 선",tip:"뒤통수는 머리카락으로 거의 다 덮어요. 얼굴은 안 보이고, 양쪽에 귀만 살짝 나와요. 몸 양옆에 괄호 모양 선을 그어요.",els:[{z:42,svg:bg(RF.hairB)},{z:3,svg:bg(runFrontLines)}]},
+  {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+
+/* 걷는 아이: 정면/뒷모습 */
+const WF=frontPerson({H:[0,1],S:[0,15],P:[0,48],
+  armL:[[-13.6,33],[-14,46]], armR:[[13.6,33],[13.2,46]],
+  legL:[[-5.5,67],[-6,85]], legR:[[5.6,66],[6,83.5]], shirt:"--c2", pants:"--c3"});
+const walkFrontShoes=(heel)=>shoeF([-6,85],"--c4",heel)+shoeF([6,83.5],"--c4",heel);
+const wfBagSides=`<g transform="translate(0 15)"><rect class="d" x="-14.6" y="1" width="29.2" height="29" rx="5" fill="var(--c3)"/></g>`;
+const wfStraps=`<g transform="translate(0 15)"><path class="d" d="M-6 -1.6 Q-8.6 10 -7.6 24 M6 -1.6 Q8.6 10 7.6 24" stroke-width="3.2"/><path d="M-6 -1.6 Q-8.6 10 -7.6 24 M6 -1.6 Q8.6 10 7.6 24" stroke="var(--c3)" stroke-width="1.5"/></g>`;
+const wbBag=`<g transform="translate(0 15)"><path class="d" d="M-3.4 3.4 Q0 -1.4 3.4 3.4"/><rect class="d" x="-11" y="3" width="22" height="30" rx="5" fill="var(--c3)"/><path class="d" d="M-8.6 7.6 Q0 4.6 8.6 7.6" stroke-width=".9"/><rect class="d" x="-7.4" y="18" width="14.8" height="11.4" rx="3"/><path class="d" d="M-5 21 L5 21" stroke-width=".8"/></g>`;
+const walkLimbTip="팔은 몸통 위쪽 양옆 어깨에서 몸 옆으로 내려 그려요. 다리는 몸통 아래 양쪽 엉덩이에서 내려 그리고, 두 발 모두 땅에 닿게 해요. 다리를 붙인 뒤 몸통 아래 선은 지워요. 손은 네 손가락을 붙이고 엄지는 몸 쪽(안쪽)으로 따로 그려요.";
+const WALK_FRONT={keep:["몸은 똑바로, 팔은 몸 옆으로","두 발 모두 땅에 닿기","정면에서는 가방 대신 어깨끈이 보여요"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:fg(WF.head)}]},
+  {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:fg(WF.torso)},{z:20.1,until:2,svg:fg(WF.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 걸을 때는 조금만 굽혀져요.",els:[{z:50,until:3,svg:fg(WF.joints)}]},
+  {t:"팔다리와 손",tip:walkLimbTip,els:[{z:19,svg:fg(WF.legs)},{z:30,svg:fg(WF.arms)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠와 반바지를 그려 색칠해요. 팔은 손목 가까이까지 옷 색으로 칠해요.",els:[{z:20.5,svg:fg(WF.shorts)},{z:21,svg:fg(WF.shirtF)},{z:31.5,svg:fg(WF.sleeves)}]},
+  {t:"가방 메기",tip:"앞에서는 가방이 등 뒤에 숨어서 어깨 양옆으로 조금만 보여요. 어깨에서 가슴 앞으로 내려오는 어깨끈 두 줄을 그려요.",els:[{z:12,svg:fg(wfBagSides)},{z:22,svg:fg(wfStraps)}]},
+  {t:"운동화 신기",tip:"앞에서 본 운동화는 둥근 앞코와 아래 밑창이 보여요. 밑창을 땅 선에 붙이고, 신발 끈을 두 줄 그어요.",els:[{z:32,svg:fg(walkFrontShoes(false))}]},
+  {t:"얼굴",tip:"앞머리를 그리고, 눈 두 개, 눈썹, 작은 코, 웃는 입, 볼을 그려요. 양쪽에 귀도 그려요.",els:[{z:42,svg:fg(WF.hairF+WF.face)}]},
+  {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+const WALK_BACK={keep:["뒷모습은 얼굴 대신 뒤통수 머리카락","가방이 등을 크게 덮어요","신발은 뒤꿈치가 보여요"],steps:[
+  {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:bg(WF.head)}]},
+  {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:bg(WF.torso)},{z:20.1,until:2,svg:bg(WF.torsoBottom)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요.",els:[{z:50,until:3,svg:bg(WF.joints)}]},
+  {t:"팔다리와 손",tip:walkLimbTip,els:[{z:19,svg:bg(WF.legs)},{z:30,svg:bg(WF.armsB)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠와 반바지를 그려 색칠해요. 팔은 손목 가까이까지 옷 색으로 칠해요.",els:[{z:20.5,svg:bg(WF.shorts)},{z:21,svg:bg(WF.shirtB)},{z:31.5,svg:bg(WF.sleeves)}]},
+  {t:"등에 가방",tip:"등 가운데에 둥근 네모 가방을 크게 그려요. 위에 손잡이 고리, 지퍼 선, 아래쪽 앞주머니를 그려요.",els:[{z:23,svg:bg(wbBag)}]},
+  {t:"운동화 신기",tip:"뒤에서 본 운동화는 둥근 뒤꿈치와 아래 밑창이 보여요. 뒤꿈치 가운데에 세로선을 하나 그어요.",els:[{z:32,svg:bg(walkFrontShoes(true))}]},
+  {t:"뒷머리",tip:"뒤통수는 머리카락으로 거의 다 덮어요. 얼굴은 안 보이고, 양쪽에 귀만 살짝 나와요.",els:[{z:42,svg:bg(WF.hairB)}]},
+  {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+RUNNER.views={side:RUN_LV, front:RUN_FRONT, back:RUN_BACK};
+WALKER.views={side:WALK_LV, front:WALK_FRONT, back:WALK_BACK};
+
+
+/* ---------- 책상 의자에 앉아 공부하는 아이 (옆모습) ---------- */
+const DP=person({H:[4,7],S:[-1,22],P:[-6,54],face:14,
+  armF:[[5.5,43.6],[19,41.8]], armB:[[2.5,44.4],[14.5,43]],
+  legF:[[15,56],[14,75]], legB:[[13,57.5],[11,75]], shirt:"--c3", pants:"--c6"});
+const DESK=T(104,64,2.2), dg=s=>g(DESK,s);
+const dFloor=`<line class="d" x1="-34" y1="80.4" x2="74" y2="80.4"/>`;
+const dChair=`<path class="d" d="M-18.5 80 L-17.5 59.5 M3 80 L2 59.5 M-17.8 66 L2.3 66" stroke-width="1.6"/><path class="d" d="M-19.5 58 L-21.5 30" stroke-width="1.6"/><rect class="d" x="-21" y="56" width="25" height="3.4" rx="1.4" fill="var(--c6)"/><rect class="d" x="-24.5" y="30" width="8" height="12" rx="2" transform="rotate(-4 -20.5 36)" fill="var(--c6)"/>`;
+const dDeskTop=`<rect class="d" x="7" y="42" width="44" height="2.8" rx="1.2" fill="var(--c6)"/>`;
+const dDeskLegs=`<path class="d" d="M10 44.8 L10 80 M48 44.8 L48 80" stroke-width="1.8"/>`;
+const dBook=`<g transform="translate(-2 0)"><path class="d" d="M26 42 Q31 38.6 37 40.6 Q43 38.6 48 42 Z" fill="var(--paperfill)"/><path class="d" d="M37 40.6 L37 42" stroke-width=".9"/><path class="d" d="M29 40.6 L34.5 39.9 M39.5 39.9 L45 40.6" stroke-width=".7"/></g>`;
+const dPencil=`<g transform="translate(20 40.4) rotate(-62)"><rect class="d" x="0" y="-1.2" width="11" height="2.4" fill="var(--c1)"/><path class="d" d="M0 -1.2 L-3 0 L0 1.2" fill="var(--paperfill)"/></g>`;
+const dShoes=shoe([14,74.4],0,"--c5")+shoe([11,74.4],0,"--c5");
+const SIT_LV={keep:["의자와 책상을 먼저, 사람은 그 다음에","앉으면 허벅지는 옆으로 눕고 종아리는 바닥으로","책상 윗면은 앉은 팔꿈치 높이, 허벅지는 책상 아래로"],steps:[
+  {t:"바닥과 의자",tip:"아래에 바닥 선을 긋고, 왼쪽에 학교 의자를 그려요. 나무 앉는 판은 옆으로 납작한 네모, 등받이는 작은 나무판을 쇠막대로 받쳐요. 다리는 가는 쇠막대 두 개와 가로대 하나예요.",els:[{z:1,svg:dg(dFloor)},{z:5,svg:dg(dChair)}]},
+  {t:"책상",tip:"의자 앞(오른쪽)에 책상을 그려요. 윗면은 납작하고 긴 네모로, 앉은 아이 팔꿈치 높이예요. 의자 판보다 아이 손 한 뼘 반쯤 높아요. 양 끝에 다리 두 개를 바닥까지 곧게 내려요.",els:[{z:4,svg:dg(dDeskLegs)},{z:25,svg:dg(dDeskTop)}]},
+  {t:"몸통과 머리",tip:"의자 판 위에 엉덩이가 닿게 몸통을 세워요. 책상 쪽으로 살짝 기울이고, 짧은 목 위에 머리를 그려요.",els:[{z:20,svg:dg(DP.torso)},{z:20.1,until:3,svg:dg(DP.torsoBottom)},{z:40,svg:dg(DP.head)}]},
+  {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 무릎은 엉덩이와 같은 높이, 책상 아래예요.",els:[{z:50,until:4,svg:dg(DP.joints)}]},
+  {t:"앉은 다리",tip:"앉으면 허벅지는 의자 위에 옆으로 눕고, 무릎에서 꺾여 종아리는 바닥으로 똑바로 내려가요. 다리를 붙인 뒤 몸통 아래 선은 지워요.",els:[{z:9,svg:dg(tube([DP.hipB,...[[13,57.5],[11,75]]]))},{z:19,svg:dg(DP.frontLeg)}]},
+  {t:"팔과 연필",tip:"팔꿈치를 굽혀 두 손을 책상 위에 올려요. 앞쪽 손에는 연필을 비스듬히 쥐어요. 엄지는 위쪽이에요.",els:[{z:10,svg:dg(DP.backArm)},{z:30,svg:dg(DP.frontArm)},{z:33,svg:dg(dPencil)}]},
+  {t:"옷 입히기",tip:"긴팔 티셔츠를 입혀 색칠하고, 팔은 손목 가까이까지 옷 색으로 칠해요. 허벅지 위에 반바지를 그려요.",els:[{z:10.5,svg:dg(DP.sleeveB)},{z:20.5,svg:dg(DP.shorts)},{z:21,svg:dg(DP.shirt)},{z:31.5,svg:dg(DP.sleeves)}]},
+  {t:"책, 신발, 얼굴",tip:"책상 위에 펼친 책을 그려요. 발에 운동화를 신기고, 머리카락과 귀, 코, 눈, 입을 그려요. 책을 보느라 얼굴이 살짝 아래를 향해요.",els:[{z:26,svg:dg(dBook)},{z:32,svg:dg(dShoes)},{z:42,svg:dg(DP.hair+DP.face)}]}]};
+const SITTER={name:"책상에 앉아 공부하는 아이", levels:[SIT_LV,SIT_LV,SIT_LV], views:{side:SIT_LV}};
+
+/* ---------- 배영하는 아이 ---------- */
+const SP=person({H:[-34,40],S:[-19,44],P:[16,48],A:[-17,45],face:-90,fix:false,
+  armF:[[-20.5,31.5],[-27,18.5]], armB:[[-3,56],[11,58]],
+  legF:[[34,45.5],[50,43.5],[56,41.5]], legB:[[34,52.5],[50,56],[56,57]], shirt:"--paperfill", pants:"--c5"});
+const SWIM=T(132,40,2), sg=s=>g(SWIM,s);
+const wave=`<path class="d" d="M-62 46 q6 -4 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0"/>`;
+const sCap=`<g transform="translate(-34 40) rotate(-90)"><path class="d" d="M-12.4 3 Q-13.8 -12.5 0 -12.8 Q11 -12.5 12.6 -3 L-1 -4.5 Q-5 0 -6 4 Q-9.5 5.5 -12.4 3 Z" fill="var(--c3)"/></g>`;
+const sFace=`<g transform="translate(-34 40) rotate(-90)"><circle class="d" cx="5.6" cy="-1.6" r="3.2" fill="var(--sweat)"/><circle cx="5.6" cy="-1.6" r="1.2" fill="currentColor" stroke="none"/><path class="d" d="M2.4 -1.8 L-5 -2.6"/><path class="d" d="M11.8 -0.5 L14.6 3.2 L11.6 4.3" fill="var(--paperfill)"/><path class="d" d="M-3.4 -1 Q-6.6 1.8 -3.4 5"/><path class="d" d="M4.6 7 Q7.6 8.8 10.2 6.6"/></g>`;
+const splash=`<path class="d" d="M69 35 q-2 3 0 4 q2 -1 0 -4z" fill="var(--sweat)"/><path class="d" d="M73 42 q-2 3 0 4 q2 -1 0 -4z" fill="var(--sweat)"/><path class="d" d="M64 30 q-1.6 2.4 0 3.2 q1.6 -0.8 0 -3.2z" fill="var(--sweat)"/><path class="d" d="M-24 12 q-1.6 2.4 0 3.2 q1.6 -0.8 0 -3.2z" fill="var(--sweat)"/><path class="d" d="M-16 9 q-1.6 2.4 0 3.2 q1.6 -0.8 0 -3.2z" fill="var(--sweat)"/>`;
+const waterTint=`<rect x="-70" y="46" width="160" height="80" fill="var(--c3)" stroke="none" opacity=".2"/>`;
+const SWIM_LV={keep:["얼굴은 하늘(천장)을 보게","몸은 물결 선을 따라 옆으로 눕혀서 반쯤 잠기게","한 팔은 하늘로 쭉, 다른 팔은 물속에서 몸 옆으로"],steps:[
+  {t:"물결 선 긋기",tip:"배영은 물 위에 하늘을 보고 누워서 하는 수영이에요. 먼저 종이 가운데에 옆으로 물결 선을 그어요.",els:[{z:1,svg:sg(wave)}]},
+  {t:"머리는 물결에 걸치게",tip:"물결 선 왼쪽에 머리 동그라미를 그려요. 머리 아래쪽은 물결에 살짝 잠기고, 얼굴은 하늘을 봐요.",els:[{z:40,svg:sg(SP.head)}]},
+  {t:"몸통을 옆으로 눕히기",tip:"몸통을 물결 선을 따라 옆으로 길게 눕혀 그려요. 가슴은 하늘 쪽으로 볼록하게, 등은 물속으로 들어가요.",els:[{z:20,svg:sg(SP.torso)},{z:20.1,until:4,svg:sg(SP.torsoBottom)}]},
+  {t:"한 팔은 머리 위로",tip:"머리 쪽 어깨 끝에서 한 팔을 머리 위쪽으로 비스듬히 쭉 뻗어 올려요. 물 밖으로 나와 머리 너머 물속으로 다시 들어가려는 팔이에요. 팔꿈치는 굽히지 않아요. 팔은 몸통 위쪽 선 뒤에서 나오게 그려요.",els:[{z:15,svg:sg(SP.frontArm)}]},
+  {t:"다른 팔은 물속에",tip:"반대쪽 팔은 물속에서 몸 옆으로 노를 젓듯 엉덩이 쪽으로 뻗어요.",els:[{z:10,svg:sg(SP.backArm)}]},
+  {t:"다리로 발차기",tip:"다리는 몸통 끝 엉덩이 양쪽에서 이어 그리고, 몸통 끝 선은 지워요. 두 다리를 쭉 펴서 한쪽은 물 위쪽, 한쪽은 조금 아래로 그려요. 다리 끝에는 맨발을 그려요. 발끝을 쭉 펴서 발가락이 뒤를 향하고, 발바닥 선을 하나 그어요. 발끝과 손끝에 물방울을 그리면 움직이는 게 보여요.",els:[{z:19,svg:sg(tube([SP.hipF,[34,45.5],[50,43.5]])+foot([34,45.5],[50,43.5]))},{z:9,svg:sg(tube([SP.hipB,[34,52.5],[50,56]])+foot([34,52.5],[50,56]))},{z:45,svg:sg(splash)}]},
+  {t:"수영모, 물안경, 수영복",tip:"머리에 수영모를 씌우고, 눈에 물안경을 그려요. 엉덩이에 수영복을 그려 색칠해요.",els:[{z:41,svg:sg(sCap+sFace)},{z:20.5,svg:sg(SP.shorts)}]},
+  {t:"물속 칠하기",tip:"물결 선 아래를 연한 파란색으로 칠해요. 몸이 물에 반쯤 잠겨 떠 있는 게 보여요.",els:[{z:60,svg:sg(waterTint)}]}]};
+const SWIMMER={name:"배영하는 아이", levels:[SWIM_LV,SWIM_LV,SWIM_LV], views:{side:SWIM_LV}};
+
+  /* ---------- 공 차는 아이 ---------- */
+  const ball=(c,r=7)=>`<g transform="translate(${c[0]} ${c[1]})"><circle class="d" cx="0" cy="0" r="${r}" fill="var(--paperfill)"/><path class="d" d="M0 -2.6 L2.5 -0.8 L1.5 2.1 L-1.5 2.1 L-2.5 -0.8 Z" fill="currentColor"/><path class="d" d="M0 -2.6 L0 -${r} M2.5 -0.8 L${r*.93} -${r*.35} M1.5 2.1 L${r*.55} ${r*.82} M-1.5 2.1 L-${r*.55} ${r*.82} M-2.5 -0.8 L-${r*.93} -${r*.35}" stroke-width=".8"/></g>`;
+  const KP=person({H:[6,1],S:[1,16],P:[-4,48],
+    armF:[[-10,30],[-18.5,38.5]], armB:[[11,29],[21,24]],
+    legF:[[13,56],[26,68]], legB:[[-6,67],[-9,84]], shirt:"--c4", pants:"--c3", hands:"relax"});
+  const KICK=T(140,46,2), kg=s=>g(KICK,s);
+  const kShoes=shoe([-9,82],0,"--c5")+shoe([26,67.5],22,"--c5");
+  const kSwing=`<path class="d" d="M4 76 q8 9 20 6 M0 70 q6 8 15 8" stroke-width=".9"/>`;
+  const kickLegTip="무릎은 언제나 몸 앞쪽(얼굴 쪽)으로만 굽혀져요. 뒤로 꺾이면 이상해요. 차는 다리는 엉덩이에서 허벅지를 앞으로 들고, 무릎에서 살짝만 굽혀 발이 공에 닿게 해요. 디딤발은 무릎을 조금 굽혀 땅을 꾹 딛어요. 다리를 붙인 뒤 몸통 아래 선은 지워요.";
+  const SOCCER_SIDE={keep:["무릎은 앞으로만 굽혀요 (뒤로 꺾이지 않아요)","차는 발은 공에, 디딤발은 땅에","팔은 양쪽으로 벌려 균형 잡기"],steps:[
+    {t:"땅과 공",tip:"아래에 땅 선을 긋고, 오른쪽 땅 위에 공을 동그랗게 그려요. 공 가운데에 오각형 무늬를 칠하고, 가장자리로 짧은 선을 다섯 개 그어요.",els:[{z:1,svg:ground(222)},{z:34,svg:kg(ball([38,81]))}]},
+    {t:"머리와 몸통",tip:"공 왼쪽 위에 머리를 그리고, 짧은 목 아래 몸통을 그려요. 공을 차면 몸이 살짝 뒤로 젖혀져요. 몸통 아래 선은 아직 그어 두세요.",els:[{z:40,svg:kg(KP.head)},{z:20,svg:kg(KP.torso)},{z:20.1,until:2,svg:kg(KP.torsoBottom)}]},
+    {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 무릎 동그라미는 엉덩이와 발을 잇는 선보다 앞쪽(공 쪽)에 있어야 해요.",els:[{z:50,until:3,svg:kg(KP.joints)}]},
+    {t:"디딤발과 차는 발",tip:kickLegTip,els:[{z:9,svg:kg(tube([KP.hipB,[-6,67],[-9,84]]))},{z:19,svg:kg(KP.frontLeg)}]},
+    {t:"균형 잡는 팔",tip:"차는 다리와 반대쪽 팔은 앞으로, 같은 쪽 팔은 뒤로 벌려요. 팔꿈치는 뒤로 튀어나오고 아래팔은 앞쪽으로만 접혀요. 뒤로 뻗은 팔도 아래팔이 위로 꺾이지 않아요. 손은 힘을 빼고 손가락을 모아서, 팔이 뻗은 방향 그대로 이어지게 그려요. 손목을 꺾지 않아요.",els:[{z:10,svg:kg(KP.backArm)},{z:30,svg:kg(KP.frontArm)}]},
+    {t:"옷 입히기",tip:"티셔츠를 입혀 색칠하고, 팔은 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 허벅지 위에 반바지를 그려요.",els:[{z:10.5,svg:kg(KP.sleeveB)},{z:20.5,svg:kg(KP.shorts)},{z:21,svg:kg(KP.shirt)},{z:31.5,svg:kg(KP.sleeves)}]},
+    {t:"축구화 신기",tip:"디딤발 신발은 밑창을 땅에 붙여요. 차는 발 신발은 발끝이 아래로 향하고, 발등이 공에 닿게 그려요.",els:[{z:32,svg:kg(kShoes)}]},
+    {t:"얼굴과 움직임 선",tip:"머리카락, 귀, 코, 눈썹과 눈, 웃는 입을 그려요. 눈은 공을 봐요. 차는 발 뒤에 휘어진 선 두 개를 그으면 발이 휙 움직인 게 보여요.",els:[{z:42,svg:kg(KP.hair+KP.face)},{z:3,svg:kg(kSwing)}]},
+    {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(222)}]}]};
+
+  const KF=frontPerson({H:[0,1],S:[0,15],P:[0,48],
+    armL:[[-16.5,28.5],[-26,32.5]], armR:[[16,29.5],[24.5,36]],
+    legL:[[-5,67],[-5.5,85]], legR:[[8,60],[10,73]], shirt:"--c4", pants:"--c3", hands:"relax"});
+  const kfShoes=(heel)=>shoeF([-5.5,85],"--c5",heel)+shoeF([10,73],"--c5",heel);
+  const kfLines=`<path class="d" d="M18 66 q5 3 6 9 M21 62 q5 3 6 8" stroke-width=".9"/>`;
+  const kfLegTip="한 다리는 땅을 딛고, 공을 차는 다리는 무릎을 들어 앞으로 내밀어요. 앞에서 보면 무릎이 우리 쪽으로 나와서 허벅지가 짧아 보여요. 무릎이 바깥이나 안쪽으로 꺾이지 않게, 엉덩이-무릎-발이 거의 한 줄이 되게 그려요. 다리를 붙인 뒤 몸통 아래 선은 지워요.";
+  const SOCCER_FRONT={keep:["차는 다리는 무릎을 들어 앞으로","무릎은 옆으로 꺾이지 않게 한 줄로","팔은 양옆으로 벌려 균형 잡기"],steps:[
+    {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:fg(KF.head)}]},
+    {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:fg(KF.torso)},{z:20.1,until:2,svg:fg(KF.torsoBottom)}]},
+    {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 든 다리의 무릎은 엉덩이 바로 아래쯤이에요.",els:[{z:50,until:3,svg:fg(KF.joints)}]},
+    {t:"디딤발과 차는 발",tip:kfLegTip,els:[{z:19,svg:fg(KF.legs)}]},
+    {t:"균형 잡는 팔",tip:"두 팔을 양옆으로 벌려 균형을 잡아요. 한 팔은 위로, 한 팔은 조금 아래로 벌려요. 손은 힘을 빼고 손가락을 모아서, 팔이 뻗은 방향 그대로 이어지게 그려요. 손목을 꺾지 않아요.",els:[{z:30,svg:fg(KF.arms)}]},
+    {t:"옷 입히기",tip:"티셔츠를 입혀 색칠하고, 양쪽 팔을 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 반바지도 그려요.",els:[{z:20.5,svg:fg(KF.shorts)},{z:21,svg:fg(KF.shirtF)},{z:31.5,svg:fg(KF.sleeves)}]},
+    {t:"축구화와 공",tip:"두 발에 축구화를 그려요. 든 발 바로 앞, 땅 위에 공을 그려요. 공 가운데 오각형 무늬를 칠해요.",els:[{z:32,svg:fg(kfShoes(false))},{z:34,svg:fg(ball([13,87]))}]},
+    {t:"얼굴과 움직임 선",tip:"앞머리, 눈 두 개, 눈썹, 작은 코, 웃는 입, 양쪽 귀를 그려요. 눈은 공을 봐요. 차는 발 옆에 휘어진 선을 그어요.",els:[{z:42,svg:fg(KF.hairF+KF.face)},{z:3,svg:fg(kfLines)}]},
+    {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+  const SOCCER_BACK={keep:["뒷모습은 얼굴 대신 뒤통수 머리카락","공은 몸에 가려 조금만 보여요","팔은 양옆으로 벌려 균형 잡기"],steps:[
+    {t:"땅과 머리",tip:"아래쪽에 땅 선을 긋고, 위쪽 가운데에 머리 동그라미를 그려요.",els:[{z:1,svg:ground(228)},{z:40,svg:bg(KF.head)}]},
+    {t:"목과 몸통",tip:runTorsoTip,els:[{z:20,svg:bg(KF.torso)},{z:20.1,until:2,svg:bg(KF.torsoBottom)}]},
+    {t:"접히는 곳 표시",tip:"팔꿈치와 무릎 자리에 작은 동그라미를 연하게 그려요. 뒤에서 보면 정면과 좌우가 바뀌어요.",els:[{z:50,until:3,svg:bg(KF.joints)}]},
+    {t:"디딤발과 차는 발",tip:kfLegTip,els:[{z:19,svg:bg(KF.legs)}]},
+    {t:"균형 잡는 팔",tip:"두 팔을 양옆으로 벌려 균형을 잡아요. 뒤에서는 엄지가 손에 가려 안 보여요.",els:[{z:30,svg:bg(KF.armsB)}]},
+    {t:"옷 입히기",tip:"티셔츠를 입혀 색칠하고, 양쪽 팔을 손목 가까이까지 옷 색으로 칠하면 긴팔이 돼요. 반바지도 그려요.",els:[{z:20.5,svg:bg(KF.shorts)},{z:21,svg:bg(KF.shirtB)},{z:31.5,svg:bg(KF.sleeves)}]},
+    {t:"축구화와 공",tip:"뒤에서 본 축구화는 뒤꿈치가 보여요. 공은 몸 앞에 있어서 다리 사이로 조금만 보여요.",els:[{z:32,svg:bg(kfShoes(true))},{z:5,svg:bg(ball([13,87]))}]},
+    {t:"뒷머리",tip:"뒤통수는 머리카락으로 거의 다 덮고, 양쪽에 귀만 살짝 나와요.",els:[{z:42,svg:bg(KF.hairB)}]},
+    {t:"잔디 그리기",tip:gTip,els:[{z:2,svg:grass(228)}]}]};
+  const SOCCER={name:"공 차는 아이", levels:[SOCCER_SIDE,SOCCER_SIDE,SOCCER_SIDE], views:{side:SOCCER_SIDE,front:SOCCER_FRONT,back:SOCCER_BACK}};
+  const out={RUNNER,WALKER,SITTER,SWIMMER,SOCCER};
+  if(EXPR!=="happy") for(const it of Object.values(out)){ if(it===SWIMMER) continue; for(const L of new Set(Object.values(it.views))){
+    L.keep=[...L.keep.slice(0,2),EXPRKEEP[EXPR]];
+    L.steps.forEach(st=>{ st.tip=st.tip.replace(/웃는 입/g,MOUTHWORD[EXPR]); if(/얼굴|뒷머리/.test(st.t)) st.tip+=EXPRTIP[EXPR]; }); } }
+  return out;
+}
+const PEOPLE={};
+function people(e){ if(!PEOPLE[e]){ const was=EXPR; EXPR=e; PEOPLE[e]=makePeople(); EXPR=was; } return PEOPLE[e]; }
+const {RUNNER,WALKER,SITTER,SWIMMER,SOCCER}=people("happy");
+
+/* ---------- 새 ---------- */
+const BIRD={name:"새", levels:[
+ {keep:["몸과 머리는 동그라미 두 개","부리는 작은 세모","다리는 가늘게, 발가락은 세 갈래"],steps:[
+  {t:"몸통 동그라미",tip:"가운데에 큰 동그라미를 그려요. 새의 몸통이에요.",els:[{z:20,svg:`<circle class="d" cx="145" cy="165" r="45" fill="var(--paperfill)"/>`}]},
+  {t:"머리 동그라미",tip:"몸통 오른쪽 위에 작은 동그라미를 겹쳐 그려요.",els:[{z:40,svg:`<circle class="d" cx="192" cy="112" r="26" fill="var(--paperfill)"/>`}]},
+  {t:"부리와 눈",tip:"머리 앞에 작은 세모 부리를 붙이고, 점으로 눈을 찍어요.",els:[{z:41,svg:`<polygon class="d" points="214,104 240,113 214,122" fill="var(--c5)"/><circle cx="200" cy="106" r="3.5" fill="currentColor" stroke="none"/>`}]},
+  {t:"날개와 꼬리",tip:"몸통 안에 나뭇잎 모양 날개를, 뒤쪽에 세모 꼬리를 그려요.",els:[{z:21,svg:`<path class="d" d="M115 155 Q148 138 178 165 Q148 192 115 155 Z"/>`},{z:5,svg:`<polygon class="d" points="104,178 64,165 70,200"/>`}]},
+  {t:"다리와 발",tip:"몸 아래로 가는 다리 두 개를 긋고, 발가락을 세 갈래로 그려요.",els:[{z:4,svg:`<line class="d" x1="90" y1="247" x2="210" y2="247"/><line class="d" x1="135" y1="206" x2="133" y2="242"/><line class="d" x1="157" y1="206" x2="159" y2="242"/><path class="d" d="M122 247 L133 242 L144 247 M133 242 L133 247"/><path class="d" d="M148 247 L159 242 L170 247 M159 242 L159 247"/>`}]}]},
+ {keep:["몸통은 비스듬한 타원","날개는 몸 위에 겹쳐 그리기","발가락으로 가지를 감싸기"],steps:[
+  {t:"나뭇가지",tip:"아래쪽에 굵은 나뭇가지를 옆으로 그려요. 작은 잔가지와 잎도 하나 붙여요.",els:[{z:1,svg:`<path class="d" d="M20 238 Q140 222 285 236" stroke-width="7"/><path class="d" d="M220 232 q14 -20 30 -24"/><ellipse class="d" cx="256" cy="204" rx="11" ry="5" transform="rotate(-30 256 204)" fill="var(--c2)"/>`}]},
+  {t:"타원 몸통과 머리",tip:"몸통을 비스듬히 기울어진 타원으로 그리고, 위쪽 끝에 머리 동그라미를 붙여요.",els:[{z:20,svg:`<ellipse class="d" cx="148" cy="168" rx="62" ry="40" transform="rotate(-28 148 168)" fill="var(--paperfill)"/>`},{z:40,svg:`<circle class="d" cx="200" cy="112" r="27" fill="var(--paperfill)"/>`}]},
+  {t:"부리와 반짝이는 눈",tip:"뾰족한 부리를 붙이고, 눈은 까맣게 칠한 뒤 작은 흰 점을 남겨요. 살아 있는 눈처럼 보여요.",els:[{z:41,svg:`<path class="d" d="M225 104 L249 112 L225 120 Z" fill="var(--c5)"/><circle cx="210" cy="106" r="5" fill="currentColor" stroke="none"/><circle cx="212" cy="104" r="1.6" fill="var(--paperfill)" stroke="none"/>`}]},
+  {t:"몸 위에 날개",tip:"몸통 위에 긴 물방울 모양 날개를 겹쳐 그리고, 깃털 선 두 개를 그어요.",els:[{z:22,svg:`<path class="d" d="M112 160 Q160 132 200 150 Q178 196 112 192 Q100 176 112 160 Z" fill="var(--c6)"/><path class="d" d="M130 176 q20 -8 40 -6"/><path class="d" d="M136 186 q16 -6 34 -6"/>`}]},
+  {t:"꼬리 깃털 세 개",tip:"몸 뒤쪽으로 길쭉한 깃털을 세 개 부채처럼 펼쳐요.",els:[{z:6,svg:`<path class="d" d="M98 186 Q66 186 40 196 Q70 198 100 194 Z" fill="var(--c6)"/><path class="d" d="M100 190 Q70 196 46 214 Q74 208 104 200 Z" fill="var(--c6)"/><path class="d" d="M102 196 Q78 212 60 230 Q86 220 108 202 Z" fill="var(--c6)"/>`}]},
+  {t:"발로 가지 잡기",tip:"짧은 다리를 내리고, 발가락을 둥글게 구부려 가지를 감싸게 그려요.",els:[{z:8,svg:`<line class="d" x1="138" y1="202" x2="138" y2="226"/><line class="d" x1="162" y1="198" x2="162" y2="225"/><path class="d" d="M128 228 Q138 236 148 227"/><path class="d" d="M152 227 Q162 236 172 226"/>`}]}]},
+ {keep:["날개는 몸보다 크게 펼치기","날개 끝은 깃털처럼 들쭉날쭉","멀리 있는 새는 작은 선 하나로"],steps:[
+  {t:"날개 자리 정하기",tip:"날개가 어디까지 펼쳐질지 연하게 선 두 개를 그어 둬요.",els:[{z:60,until:2,svg:`<g stroke-dasharray="5 5" stroke-width="2"><line x1="145" y1="160" x2="80" y2="64"/><line x1="165" y1="158" x2="226" y2="76"/></g>`}]},
+  {t:"몸통과 머리",tip:"옆으로 누운 길쭉한 타원 몸통을 그리고, 앞쪽에 머리와 부리, 눈을 그려요.",els:[{z:20,svg:`<ellipse class="d" cx="150" cy="168" rx="44" ry="20" transform="rotate(-12 150 168)" fill="var(--paperfill)"/><circle class="d" cx="196" cy="152" r="15" fill="var(--paperfill)"/><path class="d" d="M209 146 L226 152 L209 158 Z" fill="var(--c5)"/><circle cx="200" cy="149" r="2.5" fill="currentColor" stroke="none"/>`}]},
+  {t:"앞쪽 날개",tip:"몸에서 위로 크게 날개를 펼쳐요. 날개 끝은 톱니처럼 들쭉날쭉하게 그려야 깃털 같아요.",els:[{z:30,svg:`<path class="d" d="M140 162 Q118 108 78 66 L92 84 L80 88 L100 100 L90 108 L112 118 L104 126 L124 132 Q140 150 162 160 Z" fill="var(--c6)"/>`}]},
+  {t:"뒤쪽 날개",tip:"반대쪽 날개는 몸 뒤에 조금 작게 그려요. 뒤에 있는 건 작게 보여요.",els:[{z:3,svg:`<path class="d" d="M162 160 Q186 112 226 76 L218 94 L230 96 L212 110 L220 116 L196 128 Q182 146 170 162 Z" fill="var(--c6)"/>`}]},
+  {t:"꼬리와 접은 다리",tip:"뒤쪽에 부채꼴 꼬리를 그리고, 다리는 뒤로 접어 붙여요. 날 때는 다리를 접어요.",els:[{z:4,svg:`<path class="d" d="M110 176 L70 166 L66 182 L74 198 Z" fill="var(--c6)"/>`},{z:21,svg:`<path class="d" d="M140 182 L120 192 M150 182 L130 194"/>`}]},
+  {t:"멀리 나는 새들",tip:"멀리 있는 새는 갈매기 모양 선 하나로 작게 그려요. 하늘이 넓어 보여요.",els:[{z:2,svg:`<path class="d" d="M214 214 q8 -10 16 0 q8 -10 16 0"/><path class="d" d="M40 224 q5 -7 10 0 q5 -7 10 0"/><path class="d" d="M248 38 q4 -5 8 0 q4 -5 8 0"/><path class="d" d="M28 60 q12 -14 30 -6 q14 -10 26 2 q10 4 4 12 z" fill="var(--paperfill)"/>`}]}]}
+]};
+
+BIRD.views={side:BIRD.levels[1]};
+const BOOK=[
+ {re:/배영|수영|헤엄/, key:"SWIMMER", item:SWIMMER, sample:"배영하는 아이"},
+ {re:/책상|의자|공부|숙제|앉아/, key:"SITTER", item:SITTER, sample:"책상에 앉아 공부하는 아이"},
+ {re:/새|참새|비둘기|까치|까마귀|병아리/, item:BIRD, sample:"나뭇가지에 앉은 새"},
+ {re:/축구|공을 차|공 차|공차|공을 찼|슛|골대/, key:"SOCCER", item:SOCCER, sample:"공 차는 아이"},
+ {re:/걷|걸어|걸었|산책/, key:"WALKER", item:WALKER, sample:"가방 메고 걷는 초등학생"},
+ {re:/달리|뛰|달려|달렸/, key:"RUNNER", item:RUNNER, sample:"달리는 아이"}
+];
+const IDEAS=["강아지","자전거 타는 아이","우산 쓴 아이","줄넘기하는 아이","나무"];
+const LV=[{name:"1학년",sub:"막대와 동그라미로 모양 잡기"},{name:"2학년",sub:"살 붙이고 꾸미기"},{name:"3학년",sub:"표정과 움직임, 실감 나게"}];
+const LVDESC=[
+ "초등 1학년: 동그라미, 막대선, 세모, 네모 같은 아주 단순한 모양만 써요. 사람은 막대 사람(머리 동그라미 + 선 몸통/팔다리). 그 대상만의 핵심 특징 1~2가지가 보이게 하는 데 집중해요.",
+ "초등 2학년: 1학년 방법에 살을 붙여요. 사람이나 동물은 콩·타원 모양 몸통, 두 줄 팔다리(관절에서 꺾기), 간단한 옷·소품·색칠.",
+ "초등 3학년: 2학년 수준의 모양에 표정, 움직임 표현(바람, 먼지, 속도선), 앞뒤 겹침이나 크기로 원근, 작은 디테일, 그림자를 더해요. 첫 단계는 2학년 방법으로 기본 모양을 그리는 것으로 해도 돼요."
+];
+
+const $=id=>document.getElementById(id);
+LV[1].name="저학년";
+LVDESC[1]="초등 저학년(1~2학년): 동그라미, 타원, 막대선, 세모, 네모 같은 단순한 모양으로 그려요. 사람은 머리가 키의 약 4분의 1, 짧은 목, 몸통은 동그라미가 아니라 어깨가 둥글고 아래로 살짝 좁아지는 길쭉한 모양, 두 줄 팔다리(관절에서 한 번 꺾기), 손가락까지. 동물도 실제 생김새의 비율을 따르되 단순하게. 그 대상이나 동작만의 핵심 특징(예: 달리면 몸이 기울고 한 발이 떠 있음)이 분명히 보이게 하고, 간단한 옷·소품·색칠까지만.";
+let cur={item:RUNNER, ai:false, subject:""}, state={level:1, step:0, view:"front"};
+let isOwner=false;
+const VIEWS=[{k:"front",name:"정면"},{k:"left",name:"왼쪽 옆"},{k:"right",name:"오른쪽 옆"},{k:"back",name:"뒷모습"}];
+const VDESC={front:"정면: 얼굴과 몸 앞쪽이 보이게. 눈 두 개, 양쪽 귀, 몸은 거의 좌우 대칭.",side:"옆모습: 오른쪽을 보고 있게(코와 몸 앞쪽, 가는 방향이 오른쪽).",back:"뒷모습: 뒤통수와 등이 보이게. 얼굴은 안 보이고 뒷머리와 양쪽 귀만."};
+const base=v=>v==="left"||v==="right"?"side":v;
+const subj=()=>cur.subject||(cur.item&&cur.item.name)||"";
+const builtin=()=>!cur.ai&&cur.item.views[base(state.view)];
+const norm=t=>String(t).trim().replace(/\s+/g," ");
+const saved={};               /* "그릴 것|방향" → 저장된 그림 */
+const savedExact=k=>saved[norm(subj())+"|"+base(k)];
+const savedItem=k=>!cur.ai&&cur.item?saved[norm(cur.item.name)+"|"+base(k)]:undefined;
+const savedFor=k=>savedExact(k)||savedItem(k);
+const savedOf=()=>savedFor(state.view);
+/* 보여줄 저장 그림: 이 문장 그대로 저장한 것 > 백과 그림 > 백과 이름으로 저장한 것 */
+const shownSaved=()=>forceAI?null:(savedExact(state.view)||(!builtin()&&savedItem(state.view))||null);
+let forceAI=false;
+const needAI=()=>forceAI||(!builtin()&&!savedOf());
+const aiKey=()=>norm(subj())+"|"+base(state.view);
+const aiCache={}; let ctl=null, sampleFn=null, sampleChecked=false;
+
+/* ---------- AI 결과 정리 (허용한 도형과 색만 남김) ---------- */
+const TAGS=new Set(["circle","ellipse","line","polyline","polygon","path","rect","g"]);
+const ATTRS=new Set(["cx","cy","r","rx","ry","x","y","x1","y1","x2","y2","width","height","points","d","transform","fill","stroke","stroke-width","opacity","stroke-linecap","stroke-linejoin","stroke-dasharray"]);
+const COLOR=/^(none|currentColor|var\(--(paperfill|c[1-6]|sweat|grass)\))$/;
+function clean(node){
+  const out=[];
+  for(const el of [...node.children]){
+    const tag=el.localName; if(!TAGS.has(tag)) continue;
+    const attrs=[];
+    for(const a of [...el.attributes]){
+      const n=a.name, v=a.value.trim();
+      if(!ATTRS.has(n)) continue;
+      if((n==="fill"||n==="stroke") && !COLOR.test(v)) continue;
+      if(n==="transform" && !/^[\w\s().,\-]+$/.test(v)) continue;
+      if((n==="stroke-linecap"||n==="stroke-linejoin")){ if(/^(round|butt|square|miter|bevel)$/.test(v)) attrs.push(`${n}="${v}"`); continue; }
+      if(n==="stroke-dasharray"){ if(/^[\d.\s]+$/.test(v)) attrs.push(`${n}="${v}"`); continue; }
+      if(!["fill","stroke","transform","d","points"].includes(n) && !/^-?[\d.]+$/.test(v)) continue;
+      if((n==="d"||n==="points") && !/^[\d\s.,\-a-zA-Z]+$/.test(v)) continue;
+      attrs.push(`${n}="${v}"`);
+    }
+    if(tag==="g") out.push(`<g ${attrs.join(" ")}>${clean(el)}</g>`);
+    else out.push(`<${tag} class="d" ${attrs.join(" ")}/>`);
+  }
+  return out.join("");
+}
+function cleanSvg(s){
+  const doc=new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${String(s||"")}</svg>`,"image/svg+xml");
+  if(doc.querySelector("parsererror")) return "";
+  return clean(doc.documentElement);
+}
+
+function prompt(subject, lv, vb="side"){
+return `너는 초등학생에게 그림 그리는 순서를 가르치는 친절한 미술 선생님이야.
+아이가 그림일기에 "${subject}"을(를) 그리고 싶어 해. 이 수준에 맞춰 그리는 순서를 만들어 줘.
+수준: ${LVDESC[lv]}
+방향: ${VDESC[vb]}
+
+다음 JSON 하나만 답해:
+{"things":["쓴 글에 나온 사람·물건·장소를 하나도 빠짐없이 적기(예: 아이, 책상, 의자, 책, 연필)"],"plan":"먼저 실제 모습을 떠올려 적기: 몸이 서 있는지 누웠는지, 얼굴과 몸이 어느 쪽을 보는지, 팔다리 각각의 위치, 땅·물·의자 같은 주변과 몸의 관계, 캔버스 어디에 놓을지","name":"그릴 것의 짧은 이름","keep":["꼭 기억할 점 1","2","3"],"steps":[{"t":"단계 제목(12자 이내)","tip":"아이에게 말하듯 1~2문장, '~해요' 말투","svg":"이 단계에서 새로 그리는 도형들"}]}
+
+규칙:
+- steps는 6~9개. 아이가 실제로 연필로 그리는 순서대로: 큰 모양 먼저, 작은 부분과 꾸미기는 나중에.
+- 각 step의 svg에는 그 단계에서 새로 더하는 도형만 넣어. 앞 단계 도형은 자동으로 아래에 함께 보여.
+- 캔버스는 300x300 (왼쪽 위가 0,0). 그림을 가운데에 크게, 모든 좌표는 15~285 안쪽.
+- 쓸 수 있는 태그: circle, ellipse, line, polyline, polygon, path, rect, g. text·style·class는 쓰지 마.
+- 선 색은 자동으로 정해지니 stroke는 쓰지 마. stroke-width는 기본 2(쓰지 않으면 2), 굵은 선만 4~6. 선이 너무 두껍지 않게.
+- fill은 none(기본), currentColor(눈, 머리카락 같은 작은 진한 부분), var(--paperfill)(뒤의 선을 가릴 때), var(--c1) 노랑, var(--c2) 초록, var(--c3) 파랑, var(--c4) 분홍, var(--c5) 주황, var(--c6) 갈색 중에서만.
+- transform은 rotate(각도 cx cy)만.
+- 나중에 그리는 도형이 앞에 보이므로, 뒤에 있어야 할 것은 먼저 그리는 순서로 정해.
+- 사람 관절은 한쪽으로만 굽혀져: 무릎은 앞으로 튀어나오고 정강이는 뒤로 접혀(종아리가 허벅지 뒤쪽으로), 팔꿈치는 뒤로 튀어나오고 아래팔은 앞쪽(배 쪽)으로만 접혀. 팔을 뒤로 뻗어도 아래팔이 위로 꺾여 올라가지 않아. 다리는 엉덩이·무릎·발목 점을 먼저 정하고, 무릎이 엉덩이와 발목을 잇는 선보다 앞쪽에 있는지 확인해(정면에서는 무릎이 옆으로 꺾이지 않게 거의 한 줄). 팔다리 길이는 양쪽이 같게.
+- 문장에 나온 감정(깜짝 놀람, 슬픔, 화남, 기쁨 등)과 동작(열어보다, 들고 있다 등)을 얼굴 표정과 몸짓으로 분명히 보이게 그려. 깜짝 놀람은 동그랗고 큰 눈, 높이 올린 눈썹, O 모양 입, 머리 위 짧은 선.
+- things에 적은 것은 모두 steps 안에 실제로 그려. 하나라도 빠지면 안 돼. 앉아 있으면 의자, 책상에서 하면 책상, 들고 있으면 그 물건까지. 사람과 물건의 크기·높이를 실제처럼 맞춰(책상 윗면은 앉은 아이 팔꿈치 높이, 의자 판은 무릎 높이. 책상은 윗면과 다리만 간단히).
+- plan을 먼저 쓰고, 그 plan과 똑같은 자세로 좌표를 정해. 운동이나 동작이면 실제로 그 동작을 할 때의 몸 방향을 정확히 따라(예: 배영은 물 위에 하늘을 보고 누운 자세, 자전거는 안장에 앉아 손은 손잡이, 발은 페달).
+- 잔디는 땅 선 위에 풀잎 세 개씩 묶음(가운데 길게, 양옆 짧게 바깥으로 휨)을 들쭉날쭉 놓고 땅 아래를 연두색으로.
+- 옷은 간단하게: 윗옷은 몸통 모양을 조금 크게 따라 그리고 색칠, 긴팔은 팔을 손목 가까이까지 옷 색으로 칠하기만. 주름·단추·목둘레 같은 잔선은 그리지 마. 신발 앞코는 발가락 쪽(가는 방향)을 향하게.
+- 손 모양은 동작에 맞게: 달리거나 힘줄 때는 가볍게 쥔 주먹, 팔을 벌릴 때는 힘을 빼고 손가락을 모아 팔 방향 그대로(손목을 꺾지 않게), 물건을 잡거나 짚을 때만 편 손. 손가락이 팔 방향으로 뻣뻣하게 쭉 뻗지 않게.
+- 사람을 그리면 손(실제 손처럼: 손등과 손바닥, 나란히 붙은 네 손가락과 사이 선, 따로 나온 엄지. 엄지는 몸 앞쪽·안쪽을 향하고 바깥이나 뒤로 향하지 않게. 손가락을 별처럼 펼치지 마), 귀, 코, 눈, 입까지 그려. 신발은 앞코가 둥근 신발 몸통 + 납작한 밑창 + 끈으로, 맨발이면 발가락과 발바닥 선까지 그려. 동물도 눈·코·귀 같은 특징을 빠뜨리지 마.
+- 팔다리가 몸에 붙는지, 비율이 자연스러운지, 무엇을 그렸는지 바로 알아볼 수 있는지 좌표를 꼼꼼히 확인해.`;
+}
+
+function parseSteps(raw){
+  return (Array.isArray(raw)?raw:[]).slice(0,12).map((x,i)=>{
+    const els=Array.isArray(x?.els)&&x.els.length
+      ? x.els.slice(0,12).map(e=>({z:Number.isFinite(+e?.z)?+e.z:i, svg:cleanSvg(e?.svg), ...(Number.isInteger(e?.until)?{until:e.until}:{})})).filter(e=>e.svg)
+      : [{z:i,svg:cleanSvg(x?.svg)}].filter(e=>e.svg);
+    return {t:String(x?.t||`${i+1}단계`).slice(0,24), tip:String(x?.tip||"").slice(0,500), els};
+  }).filter(x=>x.els.length);
+}
+const packSteps=L=>L.steps.map(x=>({t:x.t,tip:x.tip,els:x.els.map(e=>({z:e.z,svg:e.svg,...(e.until!==undefined?{until:e.until}:{})}))}));
+async function getSample(){
+  if(sampleChecked) return sampleFn;
+  sampleChecked=true;
+  try{ sampleFn = window.claude ? await window.claude.use("sample") : null; }catch(e){ sampleFn=null; }
+  return sampleFn;
+}
+
+function setStatus(text){ $("status").hidden=!text; $("statusText").textContent=text||""; }
+
+async function loadAI(redo=false){
+  const key=aiKey(), vb=base(state.view), mySubject=subj();
+  if(redo) delete aiCache[key];
+  if(aiCache[key]){ setStatus(""); render(); updateSaveButtons(); return; }
+  setStatus(cur.ai?"Claude가 자세를 떠올리며 그리는 순서를 만들고 있어요… 1분쯤 걸려요.":"이 방향은 백과에 아직 없어서 Claude가 새로 만들고 있어요… 1분쯤 걸려요.");
+  clearGuide();
+  const sample=await getSample();
+  if(!sample){ setStatus("이 화면에서는 Claude에게 물어볼 수 없어요. 백과에 있는 방향의 그림은 바로 볼 수 있어요."); return; }
+  ctl?.abort(); ctl=new AbortController();
+  try{
+    const data=await sample.json(prompt(mySubject, 1, vb),{signal:ctl.signal, modelTier:"complex", cache:redo?false:{gcTime:86400000}});
+    const steps=parseSteps(data?.steps);
+    if(steps.length<2) throw {code:"empty"};
+    aiCache[key]={keep:(Array.isArray(data.keep)?data.keep:[]).slice(0,3).map(String), steps, name:String(data.name||mySubject)};
+    if(needAI() && aiKey()===key){ setStatus(""); render(); updateSaveButtons(); }
+  }catch(e){
+    if(e?.code==="cancelled") return;
+    const msg={not_granted:"Claude 사용을 허락하지 않아서 새 그림을 만들 수 없어요. 백과에 있는 그림은 볼 수 있어요.",
+      rate_limited:"지금은 요청이 많아요. 잠시 뒤에 다시 '그리는 법 보기'를 눌러 주세요.",
+      refused:"이 내용은 그리는 순서를 만들 수 없어요. 다른 것을 써 보세요."}[e?.code]
+      || "그리는 순서를 만들지 못했어요. '그리는 법 보기'를 한 번 더 눌러 주세요.";
+    setStatus(msg);
+  }
+}
+
+function clearGuide(){
+  $("art").innerHTML=""; $("stepNum").textContent=""; $("stepTitle").textContent="잠깐만요";
+  $("stepTip").textContent=""; $("steps").innerHTML=""; $("keep").innerHTML="";
+  $("prev").disabled=true; $("next").disabled=true;
+}
+
+function data(){ return forceAI?aiCache[aiKey()]:(shownSaved()||builtin()||aiCache[aiKey()]); }
+
+function renderViews(){
+  const has=k=>(!cur.ai&&cur.item.views[base(k)])||savedFor(k);
+  $("views").innerHTML=VIEWS.map(v=>`<button type="button" role="radio" aria-checked="${v.k===state.view}" aria-selected="${v.k===state.view}" data-k="${v.k}">${v.name}${has(v.k)?'':`<small>${isOwner?'새로 만들기':'준비 중'}</small>`}</button>`).join("");
+  $("views").querySelectorAll("button").forEach(b=>b.onclick=()=>{ const t=norm($("q").value); if(state.view===b.dataset.k&&t===norm(cur.subject)) return; state.view=b.dataset.k; state.step=0; forceAI=false; $("saveMsg").textContent=""; if(t&&t!==norm(cur.subject)) search(t); else show(); });
+}
+function renderLevels(){ return;
+  $("levels").innerHTML=LV.map((L,i)=>`<button class="lv" role="tab" type="button" aria-selected="${i===state.level}" data-i="${i}"><span>${L.name}</span><small>${L.sub}</small></button>`).join("");
+  $("levels").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.level=+b.dataset.i;state.step=0;show();});
+}
+
+function render(){
+  renderLevels();
+  const L=data(); if(!L) return;
+  $("fixForm").hidden=!isOwner;
+  const s=Math.min(state.step,L.steps.length-1); state.step=s;
+  const els=[];
+  L.steps.forEach((st,i)=>{ if(i>s) return; st.els.forEach(e=>{ if(e.until!==undefined && s>e.until) return; els.push({...e,cls:i===s?"new":"old"}); }); });
+  els.sort((a,b)=>a.z-b.z);
+  const body=els.map(e=>`<g class="${e.cls}">${e.svg.replace(/class="d"(?! pathLength)/g,'class="d" pathLength="1"')}</g>`).join("");
+  $("art").innerHTML=state.view==="left"?`<g transform="translate(300 0) scale(-1 1)">${body}</g>`:body;
+  const st=L.steps[s];
+  $("subjectTitle").textContent=subj();
+  $("stepNum").textContent=`${VIEWS.find(v=>v.k===state.view).name} · ${s+1} / ${L.steps.length}번째`;
+  $("stepTitle").textContent=st.t; $("stepTip").textContent=st.tip;
+  $("prev").disabled=s===0; $("next").disabled=false;
+  $("next").textContent=s===L.steps.length-1?"처음부터 다시":"다음 →";
+  $("steps").innerHTML=L.steps.map((x,i)=>`<li><button type="button" data-i="${i}" class="${i<s?"done":""} ${i===s?"cur":""}"><i>${i+1}</i>${x.t.replace(/[<>&]/g,"")}</button></li>`).join("");
+  $("steps").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.step=+b.dataset.i;render();});
+  $("keep").innerHTML=L.keep.map(k=>`<li>${String(k).replace(/[<>&]/g,"")}</li>`).join("");
+  $("keepTitle").textContent="꼭 기억할 세 가지";
+}
+
+function show(){
+  renderViews();
+  $("redo").hidden=!isOwner||!!builtin();
+  updateSaveButtons();
+  $("exact").hidden=!(isOwner&&!cur.ai&&norm(cur.subject)!==norm(cur.item.name));
+  $("fixForm").hidden=true; $("fixMsg").textContent="";
+  if(shownSaved()){ $("src").textContent="백과에 저장한 그림"; setStatus(""); render(); }
+  else if(needAI()&&isOwner){ $("src").textContent="Claude가 새로 만든 순서"; $("subjectTitle").textContent=subj(); loadAI(); }
+  else if(needAI()){
+    ctl?.abort(); clearGuide(); $("subjectTitle").textContent=subj(); $("src").textContent="";
+    const ok=VIEWS.filter(v=>(!cur.ai&&cur.item.views[base(v.k)])||savedFor(v.k)).map(v=>v.name);
+    setStatus(ok.length?`이 그림은 아직 ${VIEWS.find(v=>v.k===state.view).name} 모습이 준비되지 않았어요. ${ok.join(", ")}(으)로 볼 수 있어요.`:"아직 백과에 없는 그림이에요. 파란 칩에 있는 그림을 골라 보세요.");
+  }
+  else { $("src").textContent=(norm(cur.subject)===norm(cur.item.name)?"백과에 들어 있는 그림":`백과의 비슷한 그림: ${cur.item.name}`)+(cur.expr&&cur.expr!=="happy"?` · ${EXPRNAME[cur.expr]}`:""); setStatus(""); render(); }
+}
+
+function search(text){
+  $("saveMsg").textContent="";
+  text=text.trim(); if(!text) return;
+  const hit=BOOK.find(b=>b.re.test(text));
+  ctl?.abort();
+  const ex=exprOf(text);
+  cur = hit ? {item:hit.key?people(ex)[hit.key]:hit.item, ai:false, subject:text, expr:hit.key?ex:"happy"} : {item:null, ai:true, subject:text};
+  state.step=0; forceAI=false; show();
+}
+
+/* ---------- 백과에 저장 (공유 저장소) ---------- */
+let db=null, canWrite=true, unsaveArmed=false;
+const docId=k=>{let h=2166136261;for(const ch of k){h^=ch.codePointAt(0);h=Math.imul(h,16777619)>>>0;}return "d"+h.toString(16);};
+function updateSaveButtons(){
+  const isSaved=!!shownSaved(), fresh=needAI()&&!!aiCache[aiKey()];
+  $("save").hidden=!(isOwner&&db&&canWrite&&fresh);
+  $("unsave").hidden=!(isOwner&&db&&canWrite&&isSaved);
+  $("unsave").textContent="저장 지우기"; unsaveArmed=false;
+}
+function fromDoc(d){
+  const steps=parseSteps(d.steps);
+  if(steps.length<2||typeof d.subject!=="string") return null;
+  return {subject:norm(d.subject).slice(0,60), view:["front","side","back"].includes(d.view)?d.view:"side", name:String(d.name||d.subject).slice(0,40), keep:(Array.isArray(d.keep)?d.keep:[]).slice(0,3).map(x=>String(x).slice(0,80)), steps};
+}
+function renderChips(){
+  const subs=[...new Set(Object.values(saved).map(d=>d.subject))];
+  $("sugg").innerHTML=`<small>백과:</small>`+BOOK.slice().reverse().map(b=>`<button type="button" class="chip book">${b.sample}</button>`).join("")
+    +(subs.length?`<small>저장한 그림:</small>`+subs.map(t=>`<button type="button" class="chip saved"></button>`).join(""):"")
+    +(isOwner?`<small>새로 만들기:</small>`+IDEAS.map(t=>`<button type="button" class="chip">${t}</button>`).join(""):"");
+  const sv=$("sugg").querySelectorAll(".chip.saved"); subs.forEach((t,i)=>sv[i].textContent=t);
+  $("sugg").querySelectorAll("button").forEach(b=>b.onclick=()=>{$("q").value=b.textContent;search(b.textContent);});
+}
+$("save").onclick=async()=>{
+  const L=aiCache[aiKey()]; if(!db||!L) return;
+  const vb=base(state.view), subject=norm(subj());
+  $("save").disabled=true; $("saveMsg").textContent="저장하고 있어요…";
+  try{
+    await db.collection("drawings").doc(docId(subject+"|"+vb)).set({subject,view:vb,name:L.name,keep:L.keep,
+      steps:packSteps(L),savedAt:new Date().toISOString()});
+    forceAI=false; $("saveMsg").textContent="백과에 저장했어요. 다음부터는 기다리지 않고 바로 나와요.";
+  }catch(e){
+    if(e?.code==="invalid_argument"){ canWrite=false; $("saveMsg").textContent="이 화면에서는 저장할 수 없어요. 백과의 주인만 저장할 수 있어요."; }
+    else if(e?.code==="quota_exceeded") $("saveMsg").textContent="저장 공간이 가득 찼어요. 저장한 그림을 몇 개 지운 뒤 다시 저장해 주세요.";
+    else $("saveMsg").textContent="저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.";
+  }finally{ $("save").disabled=false; updateSaveButtons(); }
+};
+$("unsave").onclick=async()=>{
+  if(!unsaveArmed){ unsaveArmed=true; $("unsave").textContent="한 번 더 누르면 지워져요"; setTimeout(()=>{ if(unsaveArmed){unsaveArmed=false;$("unsave").textContent="저장 지우기";} },4000); return; }
+  const vb=base(state.view), sv=shownSaved(); if(!sv) return; const subject=sv.subject;
+  try{ await db.collection("drawings").doc(docId(subject+"|"+vb)).delete(); $("saveMsg").textContent="저장한 그림을 지웠어요."; }
+  catch(e){ $("saveMsg").textContent="지우지 못했어요. 잠시 뒤 다시 눌러 주세요."; }
+};
+/* ---------- 운영자 작업실 ---------- */
+const ICON_EMPTY="비어 있음";
+function renderCover(){
+  if(!isOwner) return;
+  const rows=[...BOOK.map(b=>({name:b.item.name,item:b.item}))];
+  const subs=[...new Set(Object.values(saved).map(d=>d.subject))].filter(t=>!rows.some(r=>norm(r.name)===t));
+  subs.forEach(t=>rows.push({name:t,item:null}));
+  const cell=(r,vb)=>{
+    const k=norm(r.name)+"|"+vb;
+    if(r.item&&r.item.views[vb]&&saved[k]) return `<span class="st"><span class="pill saved">고친 그림 저장함</span><button type="button" data-open="${vb}">보기</button></span>`;
+    if(r.item&&r.item.views[vb]) return `<span class="pill book">백과</span>`;
+    if(saved[k]) return `<span class="st"><span class="pill saved">저장함</span><button type="button" data-open="${vb}">보기</button></span>`;
+    return `<span class="st"><span class="pill">${ICON_EMPTY}</span><button type="button" class="make" data-open="${vb}">만들기</button></span>`;
+  };
+  $("cover").innerHTML=rows.map((r,i)=>`<tr data-i="${i}"><th scope="row"></th><td>${cell(r,"front")}</td><td>${cell(r,"side")}</td><td>${cell(r,"back")}</td></tr>`).join("");
+  $("cover").querySelectorAll("tr").forEach(tr=>{ const r=rows[+tr.dataset.i]; tr.querySelector("th").textContent=r.name;
+    tr.querySelectorAll("button[data-open]").forEach(b=>b.onclick=()=>{ const vb=b.dataset.open; state.view=vb==="side"?"right":vb; $("q").value=r.name; search(r.name); $("art").scrollIntoView({behavior:"smooth",block:"center"}); }); });
+}
+$("export").onclick=async()=>{
+  const list=Object.values(saved).map(d=>({subject:d.subject,view:d.view,name:d.name,keep:d.keep,steps:packSteps(d)}));
+  if(!list.length){ $("exportMsg").textContent="아직 저장한 그림이 없어요."; return; }
+  try{
+    const dl=window.claude?await window.claude.use("downloads"):null;
+    if(!dl){ $("exportMsg").textContent="이 화면에서는 파일을 내려받을 수 없어요."; return; }
+    await dl.save({filename:"그림일기백과-저장한그림.json",data:JSON.stringify({exportedAt:new Date().toISOString(),drawings:list},null,2)});
+    $("exportMsg").textContent=`${list.length}개 그림을 내보냈어요.`;
+  }catch(e){ $("exportMsg").textContent=e?.code==="cancelled"||e?.code==="declined"?"내보내기를 취소했어요.":"내보내지 못했어요. 잠시 뒤 다시 눌러 주세요."; }
+};
+
+(async()=>{
+  let u=null;
+  try{ u=window.claude?await window.claude.use("user"):null; }catch(e){}
+  try{ isOwner=u?!!(await u.isOwner()):false; }catch(e){ isOwner=false; }
+  if(isOwner){ $("studio").hidden=false; renderChips(); renderCover(); show(); }
+  try{ db=window.claude?await window.claude.use("db"):null; }catch(e){ db=null; }
+  if(!db) return;
+  try{ const w=u?await u.can("data.write"):null; if(w===false) canWrite=false; }catch(e){}
+  db.collection("drawings").onSnapshot(snap=>{
+    for(const k of Object.keys(saved)) delete saved[k];
+    snap.docs.forEach(d=>{ const v=fromDoc(d.data()||{}); if(v) saved[v.subject+"|"+v.view]=v; });
+    renderChips(); renderCover();
+    const wasShowing=$("src").textContent;
+    if(cur && (cur.ai || cur.item)){
+      if(!forceAI && !!shownSaved()!==(wasShowing==="백과에 저장한 그림")){ ctl?.abort(); show(); }
+      else { renderViews(); updateSaveButtons(); }
+    }
+  },()=>{});
+})();
+
+function fixPrompt(L, note){
+  const vb=base(state.view), rules=prompt(subj(),1,vb).split("규칙:")[1]||"";
+  return `너는 초등학생에게 그림 그리는 순서를 가르치는 친절한 미술 선생님이야.
+아래는 "${subj()}" 그림(방향: ${VDESC[vb]})의 지금 그리는 순서야. steps마다 els 안의 도형 묶음이 있고, z가 클수록 앞에 그려져(나중 단계의 도형도 z가 작으면 뒤로 가). until이 있으면 그 단계 번호(0부터)까지만 보이는 보조선이야.
+
+지금 그림(JSON):
+${JSON.stringify({name:L.name||subj(),keep:L.keep,steps:packSteps(L)})}
+
+고칠 점(어른이 직접 쓴 요청):
+"""${note}"""
+
+해야 할 일:
+- 고칠 점에 나온 부분만 고쳐. 나머지 단계·도형·좌표·색은 그대로 둬.
+- 같은 모양(JSON 하나)으로 전체를 다시 답해: {"name":..., "keep":[...3개], "steps":[{"t":..., "tip":..., "els":[{"z":숫자, "svg":"도형들", "until":숫자(있을 때만)}]}]}
+- 고친 부분에 맞게 해당 단계의 tip도 고쳐. 단계를 더하거나 빼도 돼.
+- 좌표는 기존 그림과 같은 좌표계(transform 포함)를 써.
+규칙:${rules}`;
+}
+$("fixForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const note=$("fix").value.trim(), L=data();
+  if(!note){ $("fixMsg").textContent="고칠 점을 먼저 써 주세요."; return; }
+  if(!L) return;
+  const sample=await getSample();
+  if(!sample){ $("fixMsg").textContent="이 화면에서는 Claude에게 물어볼 수 없어요."; return; }
+  ctl?.abort(); ctl=new AbortController();
+  $("fixGo").disabled=true; $("fixMsg").textContent="Claude가 고치고 있어요… 1분쯤 걸려요.";
+  const key=aiKey();
+  try{
+    const out=await sample.json(fixPrompt(L,note.slice(0,1500)),{signal:ctl.signal, modelTier:"complex", cache:false});
+    const steps=parseSteps(out?.steps);
+    if(steps.length<2) throw {code:"empty"};
+    aiCache[key]={keep:(Array.isArray(out.keep)?out.keep:L.keep).slice(0,3).map(String), steps, name:String(out.name||L.name||subj())};
+    if(aiKey()!==key) return;
+    forceAI=true; state.step=Math.min(state.step,steps.length-1);
+    $("src").textContent="고친 그림 (아직 저장 안 함)"; $("redo").hidden=false;
+    render(); updateSaveButtons();
+    $("fixMsg").textContent="고쳤어요. 마음에 들면 위의 '백과에 저장'을 눌러 주세요. 더 고칠 점이 있으면 다시 써도 돼요.";
+    $("fix").value="";
+  }catch(err){
+    if(err?.code==="cancelled") return;
+    $("fixMsg").textContent={not_granted:"Claude 사용을 허락하지 않아서 고칠 수 없어요.",rate_limited:"지금은 요청이 많아요. 잠시 뒤 다시 눌러 주세요.",refused:"이 요청은 고칠 수 없어요. 다르게 써 보세요."}[err?.code]||"고치지 못했어요. 다시 한 번 눌러 주세요.";
+  }finally{ $("fixGo").disabled=false; }
+});
+$("exact").onclick=()=>{ cur={item:null, ai:true, subject:cur.subject}; state.step=0; forceAI=false; show(); };
+$("redo").onclick=()=>{ state.step=0; forceAI=true; $("src").textContent="Claude가 새로 만든 순서"; loadAI(true); };
+$("prev").onclick=()=>{ if(state.step>0){state.step--;render();} };
+$("next").onclick=()=>{ const L=data(); if(!L) return; state.step = state.step<L.steps.length-1 ? state.step+1 : 0; render(); };
+$("askForm").addEventListener("submit",e=>{e.preventDefault();$("q").blur();search($("q").value);});
+/* 입력칸을 누르면 이전 글자가 통째로 선택돼서, 바로 새로 쓰면 지워져요 */
+const q=$("q"); let fresh=false;
+q.addEventListener("focus",()=>{ fresh=true; setTimeout(()=>q.select(),0); });
+q.addEventListener("mouseup",e=>{ if(fresh){ e.preventDefault(); q.select(); fresh=false; } });
+$("clear").onclick=()=>{ q.value=""; q.focus(); };
+
+/* 공개용: 운영자가 저장해 둔 그림을 페이지 안에 넣어 둬요 */
+const BAKED=[{"subject": "축구 공을 차서 골대에 공을 넣은 남자 아이, 골대", "view": "side", "name": "골을 넣은 축구 소년", "keep": ["얼굴, 몸 앞쪽, 찬 발끝이 모두 오른쪽 골대를 향해요", "찬 다리는 앞으로 뻗어 떠 있고, 다른 다리는 땅을 딛어요", "공은 골대 그물 안에 들어가 있고, 아이는 웃는 얼굴이에요"], "steps": [{"svg": "<rect class=\"d\" x=\"15\" y=\"253\" width=\"270\" height=\"30\" fill=\"var(--c2)\"/><line class=\"d\" x1=\"15\" y1=\"253\" x2=\"285\" y2=\"253\"/><path class=\"d\" d=\"M31 253 Q29 248 26 246 M34 253 L34 242 M37 253 Q39 248 42 246\"/><path class=\"d\" d=\"M120 253 Q118 248 115 246 M123 253 L123 243 M126 253 Q128 248 131 246\"/><path class=\"d\" d=\"M168 253 Q166 249 163 247 M171 253 L171 241 M174 253 Q176 249 179 247\"/><path class=\"d\" d=\"M262 253 Q260 248 257 246 M265 253 L265 242 M268 253 Q270 248 273 246\"/>", "t": "땅과 잔디", "tip": "먼저 아래쪽에 땅 선을 길게 긋고, 그 아래를 연두색으로 칠해요. 땅 선 위에는 풀잎 세 개씩 묶음을 여기저기 그려요."}, {"svg": "<line class=\"d\" x1=\"227\" y1=\"145\" x2=\"227\" y2=\"253\" stroke-width=\"1\"/><line class=\"d\" x1=\"244\" y1=\"145\" x2=\"244\" y2=\"253\" stroke-width=\"1\"/><line class=\"d\" x1=\"261\" y1=\"145\" x2=\"261\" y2=\"253\" stroke-width=\"1\"/><line class=\"d\" x1=\"210\" y1=\"172\" x2=\"278\" y2=\"172\" stroke-width=\"1\"/><line class=\"d\" x1=\"210\" y1=\"199\" x2=\"278\" y2=\"199\" stroke-width=\"1\"/><line class=\"d\" x1=\"210\" y1=\"226\" x2=\"278\" y2=\"226\" stroke-width=\"1\"/><line class=\"d\" x1=\"210\" y1=\"253\" x2=\"210\" y2=\"145\" stroke-width=\"5\"/><line class=\"d\" x1=\"210\" y1=\"145\" x2=\"278\" y2=\"145\" stroke-width=\"5\"/><line class=\"d\" x1=\"278\" y1=\"145\" x2=\"278\" y2=\"253\" stroke-width=\"5\"/>", "t": "골대와 그물", "tip": "오른쪽에 굵은 기둥 두 개를 세우고, 위에 가로 막대를 이어요. 안쪽에는 가는 선을 가로세로로 그어 그물을 만들어요."}, {"svg": "<circle class=\"d\" cx=\"248\" cy=\"239\" r=\"13\" fill=\"var(--paperfill)\"/><polygon class=\"d\" points=\"248,234 253,238 251,244 245,244 243,238\" fill=\"currentColor\"/><line class=\"d\" x1=\"248\" y1=\"234\" x2=\"248\" y2=\"226\"/><line class=\"d\" x1=\"253\" y1=\"238\" x2=\"260\" y2=\"235\"/><line class=\"d\" x1=\"251\" y1=\"244\" x2=\"256\" y2=\"250\"/><line class=\"d\" x1=\"245\" y1=\"244\" x2=\"240\" y2=\"250\"/><line class=\"d\" x1=\"243\" y1=\"238\" x2=\"236\" y2=\"235\"/><line class=\"d\" x1=\"217\" y1=\"231\" x2=\"230\" y2=\"233\"/><line class=\"d\" x1=\"214\" y1=\"240\" x2=\"229\" y2=\"240\"/><line class=\"d\" x1=\"217\" y1=\"249\" x2=\"230\" y2=\"247\"/>", "t": "골인한 공", "tip": "골대 안 바닥 쪽에 동그란 공을 그려요. 가운데에 까만 오각형을 칠하고, 공 뒤에 쌩 날아온 선을 그어요."}, {"svg": "<rect class=\"d\" x=\"83\" y=\"141\" width=\"9\" height=\"11\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M72 158 Q73 149 85 149 Q97 149 98 158 L94 196 L76 196 Z\" fill=\"var(--c3)\"/><circle class=\"d\" cx=\"88\" cy=\"127\" r=\"18\" fill=\"var(--paperfill)\"/>", "t": "머리와 몸통", "tip": "짧은 목을 그리고, 어깨가 둥글고 아래로 살짝 좁아지는 몸통을 그려 파란 옷으로 칠해요. 목 위에 동그란 머리를 그려요."}, {"svg": "<polygon class=\"d\" points=\"87,195 86,222 81,246 71,246 75,222 77,195\" fill=\"var(--paperfill)\"/><polygon class=\"d\" points=\"90,190 113,195 138,207 134,217 111,205 86,200\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M75 189 L96 189 L106 196 L102 207 L90 202 L87 208 L74 208 Z\" fill=\"var(--c5)\"/>", "t": "다리와 반바지", "tip": "뒤 다리는 땅으로 쭉 내리고 무릎을 살짝 앞으로 내밀어요. 찬 다리는 오른쪽 앞으로 길게 뻗어 공중에 떠 있게 하고, 위에 주황 반바지를 칠해요."}, {"svg": "<polygon class=\"d\" points=\"93,153 111,166 127,158 129,166 109,175 95,161\" fill=\"var(--paperfill)\"/><ellipse class=\"d\" cx=\"136\" cy=\"161\" rx=\"8\" ry=\"5\" transform=\"rotate(-12 136 161)\" fill=\"var(--paperfill)\"/><ellipse class=\"d\" cx=\"132\" cy=\"156\" rx=\"4\" ry=\"2.5\" transform=\"rotate(-40 132 156)\" fill=\"var(--paperfill)\"/><line class=\"d\" x1=\"139\" y1=\"157\" x2=\"141\" y2=\"164\" stroke-width=\"1\"/><line class=\"d\" x1=\"141\" y1=\"158\" x2=\"143\" y2=\"164\" stroke-width=\"1\"/><line class=\"d\" x1=\"137\" y1=\"157\" x2=\"138\" y2=\"164\" stroke-width=\"1\"/><polygon class=\"d\" points=\"84,159 68,176 59,193 51,190 60,172 77,153\" fill=\"var(--paperfill)\"/><ellipse class=\"d\" cx=\"54\" cy=\"198\" rx=\"5\" ry=\"8\" transform=\"rotate(27 54 198)\" fill=\"var(--paperfill)\"/><ellipse class=\"d\" cx=\"59\" cy=\"196\" rx=\"2.5\" ry=\"4\" transform=\"rotate(-20 59 196)\" fill=\"var(--paperfill)\"/><line class=\"d\" x1=\"49\" y1=\"201\" x2=\"55\" y2=\"204\" stroke-width=\"1\"/><line class=\"d\" x1=\"48\" y1=\"198\" x2=\"54\" y2=\"202\" stroke-width=\"1\"/><line class=\"d\" x1=\"50\" y1=\"203\" x2=\"55\" y2=\"206\" stroke-width=\"1\"/><polygon class=\"d\" points=\"77,152 85,158 79,168 70,162\" fill=\"var(--c3)\"/><polygon class=\"d\" points=\"93,152 104,159 101,168 94,162\" fill=\"var(--c3)\"/>", "t": "팔과 손", "tip": "균형을 잡으려고 가까운 팔은 뒤 아래로, 먼 팔은 앞으로 벌려요. 팔꿈치에서 한 번 꺾고, 손은 힘을 빼고 손가락을 모아 엄지는 몸 앞쪽에 그려요. 어깨에 짧은 소매도 칠해요."}, {"svg": "<path class=\"d\" d=\"M70 249 L70 241 Q78 237 86 240 Q95 242 95 247 L95 249 Z\" fill=\"var(--paperfill)\"/><rect class=\"d\" x=\"69\" y=\"249\" width=\"27\" height=\"4\" fill=\"currentColor\"/><line class=\"d\" x1=\"79\" y1=\"240\" x2=\"81\" y2=\"244\" stroke-width=\"1\"/><line class=\"d\" x1=\"83\" y1=\"241\" x2=\"85\" y2=\"245\" stroke-width=\"1\"/><g transform=\"rotate(25 136 212)\"><path class=\"d\" d=\"M130 218 L130 207 Q138 204 146 208 Q158 210 158 215 L158 218 Z\" fill=\"var(--paperfill)\"/><rect class=\"d\" x=\"129\" y=\"218\" width=\"30\" height=\"3\" fill=\"currentColor\"/><line class=\"d\" x1=\"139\" y1=\"207\" x2=\"141\" y2=\"211\" stroke-width=\"1\"/><line class=\"d\" x1=\"143\" y1=\"208\" x2=\"145\" y2=\"212\" stroke-width=\"1\"/><\/g>", "t": "축구화", "tip": "두 발에 앞코가 둥근 신발을 그리고 납작한 밑창과 끈을 그려요. 앞코는 모두 오른쪽 골대 쪽을 향해요."}, {"svg": "<path class=\"d\" d=\"M70 126 Q69 107 88 108 Q103 108 105 119 Q93 114 85 117 Q78 121 74 132 Z\" fill=\"currentColor\"/><ellipse class=\"d\" cx=\"83\" cy=\"128\" rx=\"4\" ry=\"6\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M82 125 Q84 128 82 131\" stroke-width=\"1\"/><path class=\"d\" d=\"M93 118 Q97 116 101 118\"/><circle class=\"d\" cx=\"97\" cy=\"124\" r=\"2.5\" fill=\"currentColor\"/><path class=\"d\" d=\"M105 125 L109 131 L104 132\"/><path class=\"d\" d=\"M94 136 Q100 142 105 135 Z\" fill=\"var(--c4)\"/>", "t": "얼굴과 머리카락", "tip": "오른쪽을 보도록 눈, 코, 크게 웃는 입을 그리고 머리 가운데쯤에 귀를 그려요. 머리 위와 뒤쪽에 머리카락을 진하게 칠하면 완성이에요!"}]}, {"subject": "책상에 앉아 공책을 보며 놀라는 남자 아이 / 책상위에 손 올리고", "view": "front", "name": "공책을 보고 놀란 아이", "keep": ["책상 윗면은 팔꿈치 높이, 손은 책상 위에 올리고 엄지는 공책 쪽(안쪽)을 향해요", "깜짝 놀람: 동그랗고 큰 눈, 높이 올린 눈썹, O 모양 입, 머리 위 짧은 선", "책상이 배와 허벅지를 가리니까 책상 아래로는 무릎 아래 다리와 신발만 보여요"], "steps": [{"svg": "<rect class=\"d\" x=\"108\" y=\"105\" width=\"84\" height=\"95\" fill=\"var(--c1)\"/><rect class=\"d\" x=\"95\" y=\"198\" width=\"110\" height=\"12\" fill=\"var(--c1)\"/><line class=\"d\" x1=\"102\" y1=\"210\" x2=\"102\" y2=\"278\"/><line class=\"d\" x1=\"198\" y1=\"210\" x2=\"198\" y2=\"278\"/>", "t": "의자 그리기", "tip": "먼저 아이 뒤에 있는 의자를 그려요. 큰 네모 등받이, 납작한 의자 판, 그리고 길쭉한 다리 두 개를 그려요."}, {"svg": "<rect class=\"d\" x=\"143\" y=\"96\" width=\"14\" height=\"24\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M120 116 Q150 110 180 116 Q192 122 190 140 L184 190 L116 190 L110 140 Q108 122 120 116 Z\" fill=\"var(--c2)\"/>", "t": "목과 몸통", "tip": "의자 앞에 짧은 목과, 어깨는 둥글고 아래로 살짝 좁아지는 길쭉한 몸통을 그려요. 몸통은 초록색 윗옷으로 칠해요."}, {"svg": "<ellipse class=\"d\" cx=\"120\" cy=\"75\" rx=\"6\" ry=\"9\" fill=\"var(--paperfill)\"/><ellipse class=\"d\" cx=\"180\" cy=\"75\" rx=\"6\" ry=\"9\" fill=\"var(--paperfill)\"/><circle class=\"d\" cx=\"150\" cy=\"72\" r=\"30\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M121 66 Q122 40 150 40 Q178 40 179 66 Q165 50 150 52 Q135 50 121 66 Z\" fill=\"currentColor\"/>", "t": "머리와 귀", "tip": "목 위에 동그란 머리를 크게 그리고 양옆에 귀를 붙여요. 머리 위에는 까만 머리카락을 칠해요."}, {"svg": "<rect class=\"d\" x=\"122\" y=\"196\" width=\"20\" height=\"64\" fill=\"var(--c3)\"/><rect class=\"d\" x=\"158\" y=\"196\" width=\"20\" height=\"64\" fill=\"var(--c3)\"/><path class=\"d\" d=\"M118 272 Q118 258 132 258 Q146 258 146 272 Z\" fill=\"var(--c5)\"/><rect class=\"d\" x=\"116\" y=\"272\" width=\"32\" height=\"5\" fill=\"var(--c6)\"/><line class=\"d\" x1=\"127\" y1=\"264\" x2=\"137\" y2=\"264\"/><path class=\"d\" d=\"M154 272 Q154 258 168 258 Q182 258 182 272 Z\" fill=\"var(--c5)\"/><rect class=\"d\" x=\"152\" y=\"272\" width=\"32\" height=\"5\" fill=\"var(--c6)\"/><line class=\"d\" x1=\"163\" y1=\"264\" x2=\"173\" y2=\"264\"/>", "t": "다리와 신발", "tip": "의자 판 앞으로 무릎 아래 다리 두 개를 두 줄로 내려 그리고 파란 바지를 칠해요. 발끝에 앞코가 둥근 신발, 납작한 밑창, 끈을 그려요."}, {"svg": "<polygon class=\"d\" points=\"60,165 240,165 262,188 38,188\" fill=\"var(--c6)\"/><rect class=\"d\" x=\"38\" y=\"188\" width=\"224\" height=\"10\" fill=\"var(--c6)\"/><rect class=\"d\" x=\"44\" y=\"198\" width=\"12\" height=\"82\" fill=\"var(--c6)\"/><rect class=\"d\" x=\"244\" y=\"198\" width=\"12\" height=\"82\" fill=\"var(--c6)\"/>", "t": "책상 그리기", "tip": "아이 팔꿈치 높이에 넓은 책상 윗면을 그려요. 아이 배를 가리도록 앞쪽에 그리고, 양 끝에 길쭉한 책상 다리를 내려 갈색으로 칠해요."}, {"svg": "<polygon class=\"d\" points=\"122,170 150,172 150,186 118,184\" fill=\"var(--paperfill)\"/><polygon class=\"d\" points=\"150,172 178,170 182,184 150,186\" fill=\"var(--paperfill)\"/><line class=\"d\" x1=\"126\" y1=\"176\" x2=\"146\" y2=\"177\"/><line class=\"d\" x1=\"125\" y1=\"180\" x2=\"146\" y2=\"181\"/><line class=\"d\" x1=\"154\" y1=\"177\" x2=\"174\" y2=\"176\"/><line class=\"d\" x1=\"154\" y1=\"181\" x2=\"175\" y2=\"180\"/>", "t": "공책 그리기", "tip": "책상 가운데에 펼친 공책을 그려요. 가운데 접힌 선을 긋고 양쪽 쪽에 글씨 줄을 그어요."}, {"svg": "<path class=\"d\" d=\"M114 122 Q100 126 100 145 L96 170 L114 172 L120 146 Z\" fill=\"var(--c2)\"/><path class=\"d\" d=\"M186 122 Q200 126 200 145 L204 170 L186 172 L180 146 Z\" fill=\"var(--c2)\"/><path class=\"d\" d=\"M95 168 Q105 164 115 168 L117 182 Q106 186 94 182 Z\" fill=\"var(--paperfill)\"/><line class=\"d\" x1=\"100\" y1=\"177\" x2=\"100\" y2=\"184\"/><line class=\"d\" x1=\"105\" y1=\"177\" x2=\"105\" y2=\"185\"/><line class=\"d\" x1=\"110\" y1=\"177\" x2=\"110\" y2=\"184\"/><path class=\"d\" d=\"M115 172 Q123 172 124 178 Q120 181 116 179\" fill=\"var(--paperfill)\"/><path class=\"d\" d=\"M205 168 Q195 164 185 168 L183 182 Q194 186 206 182 Z\" fill=\"var(--paperfill)\"/><line class=\"d\" x1=\"200\" y1=\"177\" x2=\"200\" y2=\"184\"/><line class=\"d\" x1=\"195\" y1=\"177\" x2=\"195\" y2=\"185\"/><line class=\"d\" x1=\"190\" y1=\"177\" x2=\"190\" y2=\"184\"/><path class=\"d\" d=\"M185 172 Q177 172 176 178 Q180 181 184 179\" fill=\"var(--paperfill)\"/>", "t": "팔과 손", "tip": "어깨에서 팔을 두 줄로 내려 팔꿈치에서 앞으로 꺾고, 손을 공책 양옆 책상 위에 올려요. 네 손가락은 나란히 붙이고, 엄지는 공책 쪽으로 따로 그려요."}, {"svg": "<circle class=\"d\" cx=\"138\" cy=\"74\" r=\"7\" fill=\"var(--paperfill)\"/><circle class=\"d\" cx=\"162\" cy=\"74\" r=\"7\" fill=\"var(--paperfill)\"/><circle class=\"d\" cx=\"138\" cy=\"77\" r=\"3\" fill=\"currentColor\"/><circle class=\"d\" cx=\"162\" cy=\"77\" r=\"3\" fill=\"currentColor\"/><path class=\"d\" d=\"M130 62 Q138 56 146 62\"/><path class=\"d\" d=\"M154 62 Q162 56 170 62\"/><path class=\"d\" d=\"M150 81 Q147 86 151 87\"/><ellipse class=\"d\" cx=\"150\" cy=\"94\" rx=\"5\" ry=\"6\"/>", "t": "놀란 얼굴", "tip": "눈을 크고 동그랗게 그리고 눈동자는 아래 공책을 보게 해요. 눈썹은 높이 올리고, 작은 코와 동그란 O 모양 입을 그려요."}, {"svg": "<line class=\"d\" x1=\"130\" y1=\"32\" x2=\"124\" y2=\"20\"/><line class=\"d\" x1=\"150\" y1=\"30\" x2=\"150\" y2=\"17\"/><line class=\"d\" x1=\"170\" y1=\"32\" x2=\"176\" y2=\"20\"/>", "t": "놀람 표시", "tip": "머리 위에 짧은 선 세 개를 그어서 깜짝 놀란 마음을 보여 줘요. 이제 그림일기 완성이에요!"}]}];
+BAKED.forEach(d=>{ const v=fromDoc(d); if(v) saved[v.subject+"|"+v.view]=v; });
+renderChips();
+
+search($("q").value);
+})();
+</script>
+</body>
+</html>
